@@ -13,28 +13,33 @@ function obtenerDatosFormulario() {
 
 function validarVehiculo(vehiculo) {
 
-    if (vehiculo.marca === '' || vehiculo.modelo === '') {
-        return false;
+    if (vehiculo.marca === '') {
+        return "La marca es obligatoria";
+    }
+
+    if (vehiculo.modelo === '') {
+        return "El modelo es obligatorio";
     }
 
     if (isNaN(vehiculo.anno) || vehiculo.anno <= 0) {
-        return false;
+        return "El año debe ser un número valido mayor a 0";
     }
 
     if (isNaN(vehiculo.precio) || vehiculo.precio <= 0) {
-        return false;
+        return "El precio debe ser un número valido mayor a 0";
     }
 
-    return true;
+    return null; // No hay errores
 }
 
 
 async function editarVehiculo(id) {
 
     const vehiculo = obtenerDatosFormulario();
+    const validacion = validarVehiculo(vehiculo);
 
-    if (!validarVehiculo(vehiculo)) {
-        alert("Complete todos los campos correctamente ❌");
+    if (validacion) {
+        alert(validacion + " ❌");
         return;
     }
 
