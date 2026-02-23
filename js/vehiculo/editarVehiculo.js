@@ -11,3 +11,23 @@ function obtenerDatosFormulario() {
 }
 
 
+function validarVehiculo(vehiculo) {
+
+    if (vehiculo.marca === '' || vehiculo.modelo === '') {
+        return false;
+    }
+
+    if (isNaN(vehiculo.anno) || vehiculo.anno <= 0) {
+        return false;
+    }
+
+    if (isNaN(vehiculo.precio) || vehiculo.precio <= 0) {
+        return false;
+    }
+
+    return true;
+}
+
+
+
+
