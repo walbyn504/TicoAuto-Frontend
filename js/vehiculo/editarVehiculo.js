@@ -29,5 +29,31 @@ function validarVehiculo(vehiculo) {
 }
 
 
+async function editarVehiculo(id) {
 
+    const vehiculo = obtenerDatosFormulario();
+
+    if (!validarVehiculo(vehiculo)) {
+        alert("Complete todos los campos correctamente ❌");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(vehiculo)
+        });
+
+        if (response.status === 200) {
+            alert("Vehículo actualizado correctamente ✅");
+            location.reload();
+        } else {
+            alert("Error al actualizar ❌");
+        }
+
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
+}
 
