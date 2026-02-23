@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Vehiculo</title>
+</head>
+
+<body>
+
+    <h1>Crear Vehiculo</h1>
+
+    <input type="text" id="marca" placeholder="Marca">
+    <input type="text" id="modelo" placeholder="Modelo">
+    <input type="number" id="anno" placeholder="Año" min="1886" max="2024">
+    <input type="number" id="precio" placeholder="Precio" min="0">
+    <br><br>
+
+    <button onclick="createVehiculo()">Crear</button>
+    <button onclick="location.href='#'">Regresar</button>
+
+
+    <script src="../../js/vehiculo/crearVehiculo.js" defer></script>
+
+</body>
+</html>
