@@ -22,7 +22,7 @@ async function iniciarSesion() {
         if (response.status === 201) {
             // Obtener el token del servidor
             const data = await response.json();
-            // Guardar el token en sessionStorage para futuras solicitudes autenticadas
+            // Guardar el token en sessionStorage
             sessionStorage.setItem('token', data.token);
             alert("Inicio de sesión exitoso ✅");
             location.href = '#';
