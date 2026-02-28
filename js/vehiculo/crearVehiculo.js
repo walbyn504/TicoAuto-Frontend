@@ -1,22 +1,14 @@
 const apiBaseUrl = 'http://localhost:3001';
 
 async function createVehiculo() {
-    const marca = document.getElementById('marca').value;
-    const modelo = document.getElementById('modelo').value;
-    const anno = parseInt(document.getElementById('anno').value);
-    const precio = parseFloat(document.getElementById('precio').value);
+    
+    const vehiculo = obtenerDatosFormulario();  
+    const validacion = validarVehiculo(vehiculo);
 
-    // Validación básica de campos 
-    if (!marca || !modelo || !anno || !precio) {
-        alert('Complete todos los campos correctamente');
+    if (validacion) {
+        alert(validacion + " ❌");
         return;
     }
-
-    const vehiculo = { 
-        marca, 
-        modelo, 
-        anno, 
-        precio };
 
     try {
         const response = await fetch(`${apiBaseUrl}/api/vehiculo`, {
