@@ -7,7 +7,7 @@ async function registrarUsuario() {
     const correo = document.getElementById('correo').value.trim();
     const contrasenna = document.getElementById('contrasenna').value.trim();
 
-    if (!nombre || !primerApellido || !correo || !contrasenna) {
+    if (!nombre || !primerApellido || !segundoApellido || !correo || !contrasenna) { 
         alert('Complete todos los campos correctamente');
         return;
     }
@@ -18,6 +18,7 @@ async function registrarUsuario() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            // convertimos los datos (javaScript) a JSON para enviarlos al servidor
             body: JSON.stringify({ nombre, primerApellido, segundoApellido, correo, contrasenna })
         });
 
