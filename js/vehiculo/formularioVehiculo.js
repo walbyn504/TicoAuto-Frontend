@@ -24,7 +24,7 @@ function cargarVehiculo(vehiculo) {
     document.getElementById('precio').value = vehiculo.precio;
 
     // Mostrar la imagen existente
-    const preview = document.getElementById('previewImagen');
+    const preview = document.getElementById('vistaPrevia');
     preview.src = `${apiBaseUrl}/imagenes/${vehiculo.imagen}`;
     preview.style.display = 'block';
 }
