@@ -41,7 +41,10 @@ function mostrarVehiculos(vehiculos) {
                         <strong>Precio:</strong> $${v.precio} <br>
                         <strong>Estado:</strong> ${v.estado || "Disponible"}
                     </p>
-                    <button class="btn btn-primary btn-sm" onclick="editarVehiculo('${v._id}')">Editar</button>
+                    <button class="btn btn-primary btn-sm" 
+                        onclick="location.href='html/vehiculo/formularioVehiculo.html?id=${v._id}'">
+                        Editar
+                    </button>
                     <button class="btn btn-danger btn-sm" onclick="eliminarVehiculo('${v._id}')">Eliminar</button>
                     <button class="btn btn-success btn-sm" onclick="marcarVendido('${v._id}')">Vendido</button>
                 </div>
@@ -52,9 +55,6 @@ function mostrarVehiculos(vehiculos) {
 }
 
 
-function editarVehiculo(id) {
-    alert(`Editar vehículo ${id}`);
-}
 
 function eliminarVehiculo(id) {
     alert(`Eliminar vehículo ${id}`);
