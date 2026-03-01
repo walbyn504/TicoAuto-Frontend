@@ -1,0 +1,95 @@
+:root {
+    --azul-neon: #ffffff;
+    --azul-suave: rgba(0, 224, 255, 0.4);
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.25)), /* 👈 gris más visible */
+        url("../../imagenes/fondo.jpg") no-repeat center center fixed;
+
+    background-size: cover;   /* 👈 ahora sí pantalla completa real */
+}
+
+/* PANEL FORMULARIO */
+.panel-formulario {
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    padding-left: 120px;
+    position: relative; /* 👈 importante */
+}
+
+/* CONTENEDOR TITULO */
+.contenedor-titulo {
+    position: absolute;  /* 👈 lo sacamos del flujo */
+    right: 150px;        /* 👈 lo mandamos a la derecha */
+    top: 50%;            /* 👈 lo bajamos */
+    transform: translateY(-50%); /* 👈 lo centramos verticalmente */
+}
+
+.titulo-derecha {
+    color: #ffffff;
+    font-size: 70px;
+    font-weight: 700;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 15);
+}
+
+/* CONTENEDOR FORM */
+.card-neon {
+    width: 100%;
+    max-width: 380px; /* 👈 más angosto */
+}
+
+/* TITULO */
+.titulo-neon {
+    color: var(--azul-neon);
+    font-weight: 700;
+}
+
+/* INPUTS MÁS CORTOS */
+.input-neon {
+    background-color: #1e1e1e;
+    border: 1px solid #2c2c2c;
+    color: white;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 10);
+    height: 42px;
+}
+
+.input-neon::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.input-neon:focus {
+    border-color: #000a90; /* borde azul metálico */
+    box-shadow: 0 0 8px 2px #00bfff, 0 0 16px 4px rgba(0, 191, 255, 0.5);
+    background-color: #1c1c1c;
+    color: white;
+    outline: none; /* evitar borde por defecto del navegador */
+}
+
+/* BOTÓN */
+.boton-neon {
+    background: linear-gradient(45deg, #003561, #00a4ba);
+    border: none;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 5);
+}
+
+.btn-outline-light {
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    background-color: transparent;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 5);
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 5);
+}
