@@ -22,6 +22,11 @@ function cargarVehiculo(vehiculo) {
     document.getElementById('modelo').value = vehiculo.modelo;
     document.getElementById('anno').value = vehiculo.anno;
     document.getElementById('precio').value = vehiculo.precio;
+
+    // Mostrar la imagen existente
+    const preview = document.getElementById('previewImagen');
+    preview.src = `${apiBaseUrl}/imagenes/${vehiculo.imagen}`;
+    preview.style.display = 'block';
 }
 
 // Ejecutar al cargar
