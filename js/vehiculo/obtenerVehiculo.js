@@ -1,28 +1,21 @@
 const apiBaseUrl = 'http://localhost:3001';
 
-// Se ejecuta al cargar la página
 window.onload = obtenerVehiculos;
 
-// ------------------- OBTENER VEHÍCULOS -------------------
 async function obtenerVehiculos() {
     try {
-
-        const response = await fetch(`${apiBaseUrl}/api/vehiculos`, {
-        });
-
-        if (response.status === 200) {
-            const vehiculos = await response.json();
+        const res = await fetch(`${apiBaseUrl}/api/vehiculos`);
+        if (res.status === 200) {
+            const vehiculos = await res.json();
             mostrarVehiculos(vehiculos);
         } else {
             alert("Error al cargar vehículos ❌");
         }
-
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
 }
 
-// ------------------- MOSTRAR VEHÍCULOS EN CARDS -------------------
 function mostrarVehiculos(vehiculos) {
     const container = document.getElementById("vehiculosContainer");
     container.innerHTML = "";
@@ -41,12 +34,8 @@ function mostrarVehiculos(vehiculos) {
                         <strong>Precio:</strong> $${v.precio} <br>
                         <strong>Estado:</strong> ${v.estado || "Disponible"}
                     </p>
-                    <button class="btn btn-primary btn-sm" 
-                        onclick="location.href='html/vehiculo/formularioVehiculo.html?id=${v._id}'">
-                        Editar
-                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="editarVehiculo('${v._id}')">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="eliminarVehiculo('${v._id}')">Eliminar</button>
-                    <button class="btn btn-success btn-sm" onclick="marcarVendido('${v._id}')">Vendido</button>
                 </div>
             </div>
         `;
@@ -54,12 +43,11 @@ function mostrarVehiculos(vehiculos) {
     });
 }
 
-
-
-function eliminarVehiculo(id) {
-    alert(`Eliminar vehículo ${id}`);
+function editarVehiculo(id) {
+    sessionStorage.setItem('vehiculoId', id);
+    location.href = 'html/vehiculo/formularioVehiculo.html';
 }
 
-function marcarVendido(id) {
-    alert(`Marcar como vendido vehículo ${id}`);
+function eliminarVehiculo(id) {
+    
 }
