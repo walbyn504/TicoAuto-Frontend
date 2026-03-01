@@ -11,10 +11,14 @@ async function createVehiculo() {
     }
 
     try {
+
+        const token = sessionStorage.getItem('token'); 
+        
         const response = await fetch(`${apiBaseUrl}/api/vehiculo`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(vehiculo)
         });
@@ -26,6 +30,7 @@ async function createVehiculo() {
         else if (response.status === 400) {
             alert("Datos inválidos ❌");
         }
+
     } catch (error) {
         alert("No se pudo conectar al servidor");
     }
