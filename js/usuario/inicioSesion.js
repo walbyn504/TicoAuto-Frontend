@@ -25,7 +25,7 @@ async function iniciarSesion() {
             // Guardar el token en sessionStorage
             sessionStorage.setItem('token', data.token);
             alert("Inicio de sesión exitoso ✅");
-            location.href = '#';
+            location.href = '../../index.html';
         }
         else if (response.status === 401) {
             alert("Credenciales inválidas ❌");
