@@ -33,6 +33,7 @@ function mostrarVehiculos(vehiculos) {
 
         card.innerHTML = `
             <div class="card h-100">
+                <img src="${v.imagen}" class="card-img-top" alt="${v.marca} ${v.modelo}">
                 <div class="card-body">
                     <h5 class="card-title">${v.marca} ${v.modelo}</h5>
                     <p class="card-text">
