@@ -24,7 +24,7 @@ async function registrarUsuario() {
 
         if (response.status === 201) {
             alert("Usuario registrado correctamente ✅");
-            location.href = '#';
+            location.href = "/html/usuario/inicioSesion.html";
         } 
         else if (response.status === 400) {
             alert("Datos inválidos ❌");
