@@ -11,6 +11,10 @@ function obtenerDatosFormulario() {
 }
 
 
+
+
+
+
 function validarVehiculo(vehiculo) {
 
     if (vehiculo.marca === '') {
@@ -31,3 +35,7 @@ function validarVehiculo(vehiculo) {
 
     return null; // No hay errores
 }
+
+
+
+
