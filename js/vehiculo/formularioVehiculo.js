@@ -75,3 +75,9 @@ form.addEventListener('submit', async e => {
         alert("No se pudo conectar al servidor ❌");
     }
 });
+
+
+document.getElementById('btnRegresar').addEventListener('click', () => {
+    sessionStorage.removeItem('vehiculoId');
+    location.href = '../../index.html';
+});
