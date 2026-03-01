@@ -9,10 +9,10 @@ body {
     min-height: 100vh;
 
     background: 
-        linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.25)), /* 👈 gris más visible */
-        url("../../imagenes/fondo.jpg") no-repeat center center fixed;
+        linear-gradient(rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.25)),
+        url("../../imagenes/fondo3.jpg") no-repeat center center fixed;
 
-    background-size: cover;   /* 👈 ahora sí pantalla completa real */
+    background-size: cover;
 }
 
 /* PANEL FORMULARIO */
@@ -22,28 +22,24 @@ body {
     justify-content: flex-start; 
     align-items: center;
     padding-left: 120px;
-    position: relative; /* 👈 importante */
+    position: relative; 
 }
 
-/* CONTENEDOR TITULO */
-.contenedor-titulo {
-    position: absolute;  /* 👈 lo sacamos del flujo */
-    right: 150px;        /* 👈 lo mandamos a la derecha */
-    top: 50%;            /* 👈 lo bajamos */
-    transform: translateY(-50%); /* 👈 lo centramos verticalmente */
-}
-
-.titulo-derecha {
+.titulo-formulario {
     color: #ffffff;
-    font-size: 70px;
-    font-weight: 700;
-    text-shadow: 3px 3px 8px rgba(0, 0, 0, 15);
+    font-size: 60px;           
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;   
+    letter-spacing: 1px;         
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 20);
+    margin-bottom: 25px;
 }
 
 /* CONTENEDOR FORM */
 .card-neon {
     width: 100%;
-    max-width: 380px; /* 👈 más angosto */
+    max-width: 380px;
 }
 
 /* TITULO */
@@ -66,11 +62,11 @@ body {
 }
 
 .input-neon:focus {
-    border-color: #000a90; /* borde azul metálico */
+    border-color: #000a90;
     box-shadow: 0 0 8px 2px #00bfff, 0 0 16px 4px rgba(0, 191, 255, 0.5);
     background-color: #1c1c1c;
     color: white;
-    outline: none; /* evitar borde por defecto del navegador */
+    outline: none;
 }
 
 /* BOTÓN */
