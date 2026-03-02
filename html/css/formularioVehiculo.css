@@ -1,0 +1,101 @@
+/* ============================= */
+/* Fondo */
+/* ============================= */
+
+body {
+    background: url('../../imagenes/fondo-gestion.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+/* ============================= */
+/* Contenedor principal */
+/* ============================= */
+
+.formulario-container {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.08);
+
+    max-width: 780px;   /* 👈 controla el ancho */
+    margin: auto;       /* 👈 lo centra */
+}
+
+/* ============================= */
+/* Título */
+/* ============================= */
+
+h1 {
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0,0,0,10);
+}
+
+/* ============================= */
+/* Inputs */
+/* ============================= */
+
+.form-control {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+}
+
+.form-control:focus {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(0,150,255,0.8);
+    box-shadow: none;
+    color: white;
+}
+
+.form-control::placeholder {
+    color: white;
+    font-weight: 600;
+}
+
+/* ============================= */
+/* Botones estilo transparente */
+/* ============================= */
+
+.btn-guardar,
+.btn-regresar {
+    background: transparent;
+    border-radius: 25px;
+    padding: 8px 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Guardar */
+.btn-guardar {
+    border: 1px solid rgba(0, 150, 255, 0.8);
+    color: rgba(0, 150, 255, 0.9);
+}
+
+.btn-guardar:hover {
+    background: rgba(0, 150, 255, 0.9);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Regresar */
+.btn-regresar {
+    border: 1px solid rgba(200, 200, 200, 0.6);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-regresar:hover {
+    background: rgba(200, 200, 200, 0.8);
+    color: black;
+    transform: translateY(-2px);
+}
