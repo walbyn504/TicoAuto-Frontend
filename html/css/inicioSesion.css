@@ -121,5 +121,5 @@ input:-webkit-autofill:hover {
 
 .link-crear:hover {
     text-decoration: underline;
-    color: var(--azul-metalico-medio);
+    color: blue;
 }
