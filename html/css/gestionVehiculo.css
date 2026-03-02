@@ -1,11 +1,138 @@
+/* ============================= */
+/* Fondo de la página */
+/* ============================= */
+
+body {
+    background: url('../../imagenes/fondo-gestion.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* un poco más claro */
+    z-index: -1;
+}
+
+/* ============================= */
+/* Contenedor principal */
+/* ============================= */
+
+.container {
+    background: rgba(255, 255, 255, 0.05); /* más transparente */
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+/* ============================= */
+/* Título */
+/* ============================= */
+
+h1 {
+    color: white;
+    text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
+}
+
+/* ============================= */
+/* Cards */
+/* ============================= */
+
+.card {
+    background: linear-gradient(
+        145deg,
+        rgba(40, 40, 45, 0.85),
+        rgba(25, 25, 30, 0.85)
+    ); /* efecto pintura metálica */
+
+    backdrop-filter: blur(4px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    color: white;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+}
+
+.card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
 .card-body {
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
-    object-fit: cover;
-    height: 200px;
 }
-.card-img-top {
-    width: 100%;  
-    height: 200px;       
-    object-fit: cover; 
+
+/* ============================= */
+/* BOTONES PERSONALIZADOS */
+/* ============================= */
+
+/* ============================= */
+/* BOTONES PREMIUM */
+/* ============================= */
+
+/* Estilo base */
+.card .btn {
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
+    color: white;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+}
+
+/* Hover general */
+.card .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+/* EDITAR */
+.btn-primary {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0, 180, 255, 0.5);
+}
+
+.btn-primary:hover {
+    background: rgba(0, 180, 255, 0.2);
+    border-color: rgba(0, 180, 255, 0.8);
+}
+
+/* ELIMINAR */
+.btn-danger {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 70, 70, 0.5);
+}
+
+.btn-danger:hover {
+    background: rgba(255, 70, 70, 0.2);
+    border-color: rgba(255, 70, 70, 0.8);
+}
+
+/* Botón Crear Vehículo */
+.btn-success {
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px; /* menos largo */
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-success:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
