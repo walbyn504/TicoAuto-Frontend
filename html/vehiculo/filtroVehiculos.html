@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TicoAuto - Buscador de Vehículos</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .filtros { display: flex; gap: 10px; flex-wrap: wrap; background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .campo { display: flex; flex-direction: column; }
+        .tarjetas-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .tarjeta { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tarjeta h3 { margin-top: 0; color: #333; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; align-self: flex-end; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>🚗 TicoAuto: Buscador</h1>
+
+    <div class="filtros">
+        <div class="campo">
+            <label>Marca:</label>
+            <input type="text" id="marca" placeholder="Ej: Toyota">
+        </div>
+        <div class="campo">
+            <label>Estado:</label>
+            <select id="estado">
+                <option value="">Todos</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Usado">Usado</option>
+            </select>
+        </div>
+        <div class="campo">
+            <label>Precio Mín:</label>
+            <input type="number" id="minPrecio" placeholder="0">
+        </div>
+        <div class="campo">
+            <label>Precio Máx:</label>
+            <input type="number" id="maxPrecio" placeholder="999999">
+        </div>
+        <button onclick="ejecutarBusqueda()">Buscar</button>
+    </div>
+
+    <div id="lista-vehiculos" class="tarjetas-container">
+        </div>
+
+    <script src="/js/vehiculo/filtroVehiculos.js"></script>
+</body>
+</html>
