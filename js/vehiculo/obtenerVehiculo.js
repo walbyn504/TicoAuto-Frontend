@@ -23,10 +23,11 @@ function mostrarVehiculos(vehiculos) {
     vehiculos.forEach(v => {
         const card = document.createElement("div");
         card.className = "col-md-4 mb-4";
-
         card.innerHTML = `
             <div class="card h-100">
-                <img src="${v.imagen}" class="card-img-top" alt="${v.marca} ${v.modelo}">
+                <img src="${apiBaseUrl}/imagenes/${v.imagen}" 
+                     class="card-img-top" 
+                     alt="${v.marca} ${v.modelo}">
                 <div class="card-body">
                     <h5 class="card-title">${v.marca} ${v.modelo}</h5>
                     <p class="card-text">
