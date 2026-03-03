@@ -1,51 +1,59 @@
 const apiBaseUrl = 'http://localhost:3001';
-const form = document.getElementById('formVehiculo');
 const token = sessionStorage.getItem('token');
 
-// Función intermedia: decide si crea o edita
-async function procesarVehiculo() {
+// --- Función principal: inicializa la página ---
+async function initVehiculo() {
     const id = sessionStorage.getItem('vehiculoId');
+    if (id) await cargarVehiculo(id);
+}
 
-    if (id) {
-        // EDITAR
-        const res = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+// --- Cargar vehículo para edición ---
+async function cargarVehiculo(id) {
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        const vehiculo = await res.json();
-        cargarVehiculo(vehiculo);
+        if (!response.ok) throw new Error("Error al cargar vehículo");
+
+        const vehiculo = await response.json(); 
+        llenarFormulario(vehiculo);
+    } catch (error) {
+        alert("No se pudo cargar el vehículo ❌");
     }
 }
 
-function cargarVehiculo(vehiculo) {
-    document.getElementById('vehiculoId').value = vehiculo._id;
-    document.getElementById('marca').value = vehiculo.marca;
-    document.getElementById('modelo').value = vehiculo.modelo;
-    document.getElementById('anno').value = vehiculo.anno;
-    document.getElementById('precio').value = vehiculo.precio;
+// --- Llenar formulario con los datos del vehículo ---
+function llenarFormulario(vehiculo) {
+    const form = document.getElementById('formVehiculo');
+    form.vehiculoId.value = vehiculo._id;
+    form.marca.value = vehiculo.marca;
+    form.modelo.value = vehiculo.modelo;
+    form.anno.value = vehiculo.anno;
+    form.precio.value = vehiculo.precio;
 
-    // Mostrar la imagen existente
-    const preview = document.getElementById('vistaPrevia');
-    preview.src = `${apiBaseUrl}/imagenes/${vehiculo.imagen}`;
-    preview.style.display = 'block';
+    if (vehiculo.imagen) {
+        const preview = document.getElementById('vistaPrevia');
+        preview.src = `${apiBaseUrl}/imagenes/${vehiculo.imagen}`;
+        preview.style.display = 'block';
+    }
 }
 
-// Ejecutar al cargar
-window.onload = procesarVehiculo;
-
-// Evento submit
-form.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const id = document.getElementById('vehiculoId').value;
-    const marca = document.getElementById('marca').value.trim();
-    const modelo = document.getElementById('modelo').value.trim();
-    const anno = parseInt(document.getElementById('anno').value);
-    const precio = parseFloat(document.getElementById('precio').value);
-    const imagen = document.getElementById('imagen').files[0];
+// --- Guardar o actualizar vehículo ---
+async function guardarVehiculo() {
+    const form = document.getElementById('formVehiculo');
+    const id = form.vehiculoId.value;
+    const marca = form.marca.value.trim();
+    const modelo = form.modelo.value.trim();
+    const anno = parseInt(form.anno.value);
+    const precio = parseFloat(form.precio.value);
+    const imagen = form.imagen.files[0];
 
     if (!marca || !modelo || isNaN(anno) || isNaN(precio)) {
-        alert("Complete todos los campos ❌");
-        return;
+        return alert("Complete todos los campos ❌");
+    }
+    
+    if (!id && !imagen) {
+        return alert("Seleccione una imagen para el vehículo ❌");
     }
 
     const formData = new FormData();
@@ -53,7 +61,9 @@ form.addEventListener('submit', async e => {
     formData.append('modelo', modelo);
     formData.append('anno', anno);
     formData.append('precio', precio);
-    if (imagen) formData.append('imagen', imagen);
+    if (imagen) {
+        formData.append('imagen', imagen);
+    }
 
     try {
         const response = await fetch(
@@ -64,20 +74,21 @@ form.addEventListener('submit', async e => {
                 body: formData
             }
         );
-        if (response.ok) {
-            alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
-            sessionStorage.removeItem('vehiculoId');
-            location.href = '../../index.html';
-        } else {
-            alert("Error al guardar ❌");
-        }
-    } catch (error) {
+        if (!response.ok) throw new Error();
+
+        alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
+        sessionStorage.removeItem('vehiculoId');
+        location.href = '../../index.html';
+    } catch {
         alert("No se pudo conectar al servidor ❌");
     }
-});
+}
 
-
-document.getElementById('btnRegresar').addEventListener('click', () => {
+// --- Regresar al índice ---
+function regresar() {
     sessionStorage.removeItem('vehiculoId');
     location.href = '../../index.html';
-});
+}
+
+// --- Inicializar al cargar la página ---
+initVehiculo();

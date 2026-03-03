@@ -35,8 +35,14 @@ function mostrarVehiculos(vehiculos) {
                         <strong>Precio:</strong> $${v.precio} <br>
                         <strong>Estado:</strong> ${v.estado || "Disponible"}
                     </p>
-                    <button class="btn btn-primary btn-sm" onclick="editarVehiculo('${v._id}')">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="eliminarVehiculo('${v._id}')">Eliminar</button>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="editarVehiculo('${v._id}')">
+                            Editar
+                        </button>
+                        <button class="btn btn-danger btn-sm flex-fill" onclick="eliminarVehiculo('${v._id}')">
+                            Eliminar
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
