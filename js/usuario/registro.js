@@ -22,16 +22,16 @@ async function registrarUsuario() {
             body: JSON.stringify({ nombre, primerApellido, segundoApellido, correo, contrasenna })
         });
 
-        if (response.status === 201) {
-            alert("Usuario registrado correctamente ✅");
-            location.href = "/html/usuario/inicioSesion.html";
-        } 
-        else if (response.status === 400) {
-            alert("Datos inválidos ❌");
+        const data = await response.json();
+
+        if (!response.ok) {
+        alert(data.message); 
+        return;
         }
-        else if (response.status === 500) {
-            alert("Error del servidor ❌");
-        }
+
+        alert("Usuario registrado correctamente ✅");
+        location.href = "/html/usuario/inicioSesion.html";
+
     } catch (error) {
         alert("No se pudo conectar al servidor");
     }
