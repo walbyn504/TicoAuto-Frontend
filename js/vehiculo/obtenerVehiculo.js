@@ -63,3 +63,4 @@ function cerrarSesion() {
     sessionStorage.removeItem("token");
     location.href = "/html/usuario/inicioSesion.html";
 }
+
