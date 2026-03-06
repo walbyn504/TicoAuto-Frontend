@@ -19,7 +19,7 @@ async function iniciarSesion() {
             body: JSON.stringify({ correo: correo, contrasenna: contrasenna })
         });
 
-        if (response.status === 201) {
+        if (response.ok) {
             // Obtener el token del servidor
             const data = await response.json();
             // Guardar el token en sessionStorage
