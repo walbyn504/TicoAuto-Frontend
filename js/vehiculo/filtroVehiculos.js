@@ -121,18 +121,13 @@ function refrescar(){
 }
 
 function limpiarCampos(){ 
-    document.getElementById ('marca').value = " ";
-    document.getElementById ('modelo').value = " ";
-    document.getElementById ('minAnno').value = " ";
-    document.getElementById ('maxAnno').value = " ";
-    document.getElementById ('minPrecio').value = " ";
-    document.getElementById ('maxPrecio').value = " ";
-    document.getElementById ('estado').value = " ";
-}
-
-// --- Ver detalles del vehículo ---
-function verDetalles(id) {
-    window.location.href = `detalleVehiculo.html?id=${id}`;
+    document.getElementById ('marca').value = "";
+    document.getElementById ('modelo').value = "";
+    document.getElementById ('minAnno').value = "";
+    document.getElementById ('maxAnno').value = "";
+    document.getElementById ('minPrecio').value = "";
+    document.getElementById ('maxPrecio').value = "";
+    document.getElementById ('estado').value = "";
 }
 
 
