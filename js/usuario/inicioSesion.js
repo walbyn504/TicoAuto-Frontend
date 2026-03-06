@@ -24,6 +24,7 @@ async function iniciarSesion() {
             const data = await response.json();
             // Guardar el token en sessionStorage
             sessionStorage.setItem('token', data.token);
+            sessionStorage.setItem('usuario', data.nombre);
             alert("Inicio de sesión exitoso ✅");
             location.href = '../../index.html';
         }
