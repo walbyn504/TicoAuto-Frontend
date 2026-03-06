@@ -1,0 +1,115 @@
+/* ============================= */
+/* Fondo */
+/* ============================= */
+
+body {
+    background: url('../imagenes/fondo-filtro.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    height: 100%;
+    min-height: 100%;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: -1;
+}
+
+/* ============================= */
+/* Contenedor */
+/* ============================= */
+
+.container {
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+/* ============================= */
+/* Titulo */
+/* ============================= */
+
+h1 {
+    color: #00b4ff;
+    font-size: 3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 10);
+}
+
+/* ============================= */
+/* Card de filtros */
+/* ============================= */
+
+.filtros-card {
+    background: rgba(30,30,35,0.85);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    border-radius: 15px;
+}
+
+/* Inputs */
+
+.form-control,
+.form-select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0,180,255,0.6);
+    color: rgb(0, 0, 0);
+}
+
+.form-control::placeholder {
+    color: black;
+}
+
+/* ============================= */
+/* Cards de vehículos */
+/* ============================= */
+
+.card {
+    background: linear-gradient(
+        145deg,
+        rgba(40,40,45,0.9),
+        rgba(25,25,30,0.9)
+    );
+
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: 0.3s ease;
+    color: white;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* ============================= */
+/* Botones */
+/* ============================= */
+
+.btn-primary {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,180,255,0.6);
+}
+
+.btn-primary:hover {
+    background: rgba(0,180,255,0.2);
+}
+
+/* Texto */
+
+.card-title {
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 0.9rem;
+}
