@@ -4,7 +4,8 @@ const token = sessionStorage.getItem('token');
 
 // --- Función principal: inicializa la página ---
 async function initFiltroVehiculos() {
-    await cargarVehiculos();
+    await cargarVehiculos(), verificarUsuario();
+
 }
 
 // --- Cargar vehículos para el filtro ---
@@ -36,26 +37,60 @@ function mostrarVehiculos(vehiculos) {
         card.className = "col-md-4 mb-4";
         card.innerHTML = `
             <div class="card h-100">
+
                 <img src="${apiBaseUrl}/imagenes/${v.imagen}" 
                      class="card-img-top" 
                      alt="${v.marca} ${v.modelo}">
                 <div class="card-body">
+
                     <h5 class="card-title">${v.marca} ${v.modelo}</h5>
+
                     <p class="card-text">
+
                         <strong>Año:</strong> ${v.anno} <br>
                         <strong>Precio:</strong> $${v.precio} <br>
                         <strong>Estado:</strong> ${v.estado || "Disponible"}
+
                     </p>
                     <div class="d-flex gap-2 mt-2">
+
                         <button class="btn btn-primary btn-sm flex-fill" onclick="verDetalles('${v._id}')">
                             Ver Detalles
                         </button>
+
                     </div>
                 </div>
             </div>
         `;
         contenedor.appendChild(card);
     });
+}
+
+function verificarUsuario() {
+    const token = sessionStorage.getItem("token");
+    const usuario = sessionStorage.getItem("usuario");
+
+    const nombreCont = document.getElementById("nombreUsuario");
+    const botonesCont = document.getElementById("botonesUsuario");
+
+    if (!token || !usuario) {
+        nombreCont.innerHTML = "";
+        botonesCont.innerHTML = `
+            <a href="/html/usuario/inicioSesion.html" class="btn btn-outline-light me-2">
+                Iniciar Sesión
+            </a>
+            <a href="/html/usuario/registro.html" class="btn btn-primary">
+                Registrarse
+            </a>
+        `;
+    } else {
+        nombreCont.innerHTML = `👤 ${usuario}`;
+        botonesCont.innerHTML = `
+            <button onclick="cerrarSesion()" class="btn btn-outline-light">
+                Cerrar sesión
+            </button>
+        `;
+    }
 }
 
 // --- Filtrar vehículos ---
@@ -130,5 +165,10 @@ function limpiarCampos(){
     document.getElementById ('estado').value = "";
 }
 
+function cerrarSesion(){
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("usuario");
+    window.location.href = "/html/usuario/inicioSesion.html";
+}
 
 initFiltroVehiculos();
