@@ -17,6 +17,12 @@ body {
     background-size: cover;
 }
 
+.navbar {
+    backdrop-filter: blur(6px);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
 /* CONTENEDOR */
 .contenedor-login {
     min-height: 100vh;
