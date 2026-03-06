@@ -1,38 +1,139 @@
-const URL_API = 'http://localhost:3001/api/vehiculos';
+const apiBaseUrl = 'http://localhost:3001';
 
+const token = sessionStorage.getItem('token');
 
-async function ejecutarBusqueda() {
-    const lista = document.getElementById('lista-vehiculos');
-    
-    // 1. Recoger datos de los inputs de forma agrupada
-    const filtros = {
-        marca: document.getElementById('marca').value.trim(),
-        estado: document.getElementById('estado').value,
-        minPrecio: document.getElementById('minPrecio').value,
-        maxPrecio: document.getElementById('maxPrecio').value
-    };
+// --- Función principal: inicializa la página ---
+async function initFiltroVehiculos() {
+    await cargarVehiculos();
+}
 
-    // 2. Limpiar campos vacíos para no enviarlos
-    const params = new URLSearchParams();
-    for (let k in filtros) { if (filtros[k]) params.append(k, filtros[k]); }
-
+// --- Cargar vehículos para el filtro ---
+async function cargarVehiculos() {
     try {
-        const res = await fetch(`${URL_API}?${params}`);
-        const vehiculos = await res.json();
+        const response = await fetch(`${apiBaseUrl}/api/vehiculos`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-        // 3. Dibujar resultados (usando .map para ahorrar código)
-        lista.innerHTML = vehiculos.map(v => `
-            <div class="tarjeta">
-                <h3>${v.marca} ${v.modelo || ''}</h3>
-                <p>Precio: $${v.precio}</p>
-                <p>Estado: ${v.estado}</p>
-            </div>
-        `).join('') || '<p>No se encontraron resultados</p>';
+        const vehiculos = await response.json();
 
-    } catch (e) {
-        lista.innerHTML = '<p style="color:red;">Error de conexión</p>';
+        if (!response.ok){
+            alert (vehiculos.message);
+            return
+        }
+
+        mostrarVehiculos(vehiculos);
+    } catch (error) {
+        alert("No se pudieron cargar los vehículos ❌");
     }
 }
 
-// Carga inicial
-document.addEventListener('DOMContentLoaded', ejecutarBusqueda);
+// --- Mostrar vehículos en cartas ---
+function mostrarVehiculos(vehiculos) {
+    const contenedor = document.getElementById('vehiculosContainer');
+    contenedor.innerHTML = '';  
+    vehiculos.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "col-md-4 mb-4";
+        card.innerHTML = `
+            <div class="card h-100">
+                <img src="${apiBaseUrl}/imagenes/${v.imagen}" 
+                     class="card-img-top" 
+                     alt="${v.marca} ${v.modelo}">
+                <div class="card-body">
+                    <h5 class="card-title">${v.marca} ${v.modelo}</h5>
+                    <p class="card-text">
+                        <strong>Año:</strong> ${v.anno} <br>
+                        <strong>Precio:</strong> $${v.precio} <br>
+                        <strong>Estado:</strong> ${v.estado || "Disponible"}
+                    </p>
+                    <div class="d-flex gap-2 mt-2">
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="verDetalles('${v._id}')">
+                            Ver Detalles
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
+}
+
+// --- Filtrar vehículos ---
+async function ejecutarBusqueda() {
+    try {
+
+        const marca = document.getElementById('marca').value.trim();
+        const modelo = document.getElementById('modelo').value.trim();
+        const anno_min = document.getElementById('minAnno').value;
+        const anno_max = document.getElementById('maxAnno').value;
+        const precio_min = document.getElementById('minPrecio').value;
+        const precio_max = document.getElementById('maxPrecio').value;
+        const estado = document.getElementById('estado').value;
+         
+        // Construir query params dinámicamente
+        const params = new URLSearchParams();
+
+        // Agregar parámetros (campos) que el usuario ha llenado
+        if (marca) {
+            params.append('marca', marca); 
+        }
+        if (modelo) {
+            params.append('modelo', modelo);
+        }
+        if (anno_min) {
+            params.append('anno_min', anno_min);
+        }
+        if (anno_max) {
+            params.append('anno_max', anno_max);
+        }
+        if (precio_min) {
+            params.append('precio_min', precio_min);
+        }
+        if (precio_max) {
+            params.append('precio_max', precio_max);
+        }
+        if (estado) {
+            params.append('estado', estado);
+        }
+
+        const response = await fetch(`${apiBaseUrl}/api/vehiculos/filtro?${params.toString()}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const vehiculos = await response.json();
+
+        if (!response.ok) {
+            limpiarCampos();
+           alert (vehiculos.message);
+           return
+        }
+
+        mostrarVehiculos(vehiculos);
+
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
+}
+
+function refrescar(){
+    limpiarCampos();
+    cargarVehiculos();
+}
+
+function limpiarCampos(){ 
+    document.getElementById ('marca').value = " ";
+    document.getElementById ('modelo').value = " ";
+    document.getElementById ('minAnno').value = " ";
+    document.getElementById ('maxAnno').value = " ";
+    document.getElementById ('minPrecio').value = " ";
+    document.getElementById ('maxPrecio').value = " ";
+    document.getElementById ('estado').value = " ";
+}
+
+// --- Ver detalles del vehículo ---
+function verDetalles(id) {
+    window.location.href = `detalleVehiculo.html?id=${id}`;
+}
+
+
+initFiltroVehiculos();
