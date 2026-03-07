@@ -4,10 +4,11 @@ async function registrarUsuario() {
     const nombre = document.getElementById('nombre').value.trim();
     const primerApellido = document.getElementById('primerApellido').value.trim();
     const segundoApellido = document.getElementById('segundoApellido').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
     const correo = document.getElementById('correo').value.trim();
     const contrasenna = document.getElementById('contrasenna').value.trim();
 
-    if (!nombre || !primerApellido || !segundoApellido || !correo || !contrasenna) { 
+    if (!nombre || !primerApellido || !segundoApellido || !telefono || !correo || !contrasenna) { 
         alert('Complete todos los campos correctamente');
         return;
     }
@@ -19,7 +20,7 @@ async function registrarUsuario() {
                 'Content-Type': 'application/json'
             },
             // convertimos los datos (javaScript) a JSON para enviarlos al servidor
-            body: JSON.stringify({ nombre, primerApellido, segundoApellido, correo, contrasenna })
+            body: JSON.stringify({ nombre, primerApellido, segundoApellido, telefono, correo, contrasenna })
         });
 
         const data = await response.json();
