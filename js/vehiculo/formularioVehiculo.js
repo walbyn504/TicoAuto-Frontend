@@ -1,6 +1,11 @@
 const apiBaseUrl = 'http://localhost:3001';
 const token = sessionStorage.getItem('token');
 
+if (!token) {
+    alert("Debe iniciar sesión");
+    location.href = "/html/usuario/inicioSesion.html";
+}
+
 
 // --- Función principal: inicializa la página ---
 async function initVehiculo() {
