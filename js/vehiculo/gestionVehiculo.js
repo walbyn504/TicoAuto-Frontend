@@ -51,16 +51,15 @@ function mostrarVehiculos(vehiculos) {
 }
 
 function editarVehiculo(id) {
-    sessionStorage.setItem('vehiculoId', id);
-    location.href = 'html/vehiculo/formularioVehiculo.html';
+    location.href = `/html/vehiculo/formularioVehiculo.html?id=${id}`;
+    
 }
 
 function eliminarVehiculo(id) {
     
 }
 
-function cerrarSesion() {
-    sessionStorage.removeItem("token");
-    location.href = "/html/usuario/inicioSesion.html";
+function cerrar() {
+    location.href = "/index.html";
 }
 
