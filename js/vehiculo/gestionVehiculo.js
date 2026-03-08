@@ -2,6 +2,18 @@ const apiBaseUrl = 'http://localhost:3001';
 
 window.onload = obtenerVehiculos;
 
+function verificarSesion() {
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+        alert("Debe iniciar sesión");
+        location.href = "/html/usuario/inicioSesion.html";
+        return null;
+    }
+
+    return token;
+}
+
 async function obtenerVehiculos() {
     try {
         const res = await fetch(`${apiBaseUrl}/api/vehiculos`);
@@ -55,8 +67,39 @@ function editarVehiculo(id) {
     
 }
 
-function eliminarVehiculo(id) {
-    
+function confirmarEliminacion() {
+    return confirm("¿Seguro que desea eliminar este vehículo?");
+}
+
+async function eliminarVehiculo(id) {
+
+    if (!confirmarEliminacion()) return;
+
+    const token = verificarSesion();
+    if (!token) return;
+
+    try {
+        const res = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (res.status === 200) {
+            alert("Vehículo eliminado correctamente ✅");
+            obtenerVehiculos();
+        }
+        else if (res.status === 404) {
+            alert("El vehículo no existe ❌");
+        }
+        else {
+            alert("Error al eliminar el vehículo ❌");
+        }
+
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
 }
 
 function cerrar() {
