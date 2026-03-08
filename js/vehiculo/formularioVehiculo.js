@@ -41,6 +41,10 @@ function llenarFormulario(vehiculo) {
     form.modelo.value = vehiculo.modelo;
     form.anno.value = vehiculo.anno;
     form.precio.value = vehiculo.precio;
+    form.combustible.value = vehiculo.combustible;
+    form.color.value = vehiculo.color;
+    form.transmision.value = vehiculo.transmision;
+    form.condicion.value = vehiculo.condicion;
 
     if (vehiculo.imagen) {
         const preview = document.getElementById('vistaPrevia');
@@ -57,7 +61,11 @@ async function guardarVehiculo() {
     const modelo = form.modelo.value.trim();
     const anno = parseInt(form.anno.value);
     const precio = parseFloat(form.precio.value);
-    const imagen = form.imagen.files[0];
+    const combustible = form.combustible.value;
+    const color = form.color.value.trim();
+    const transmision = form.transmision.value;
+    const condicion = form.condicion.value;
+    const imagen = document.getElementById("imagen").files[0];
 
     if (!marca || !modelo || isNaN(anno) || isNaN(precio)) {
         return alert("Complete todos los campos ❌");
@@ -72,6 +80,10 @@ async function guardarVehiculo() {
     formData.append('modelo', modelo);
     formData.append('anno', anno);
     formData.append('precio', precio);
+    formData.append('combustible', combustible);
+    formData.append('color', color);
+    formData.append('transmision', transmision);
+    formData.append('condicion', condicion);
     if (imagen) {
         formData.append('imagen', imagen);
     }
@@ -85,7 +97,12 @@ async function guardarVehiculo() {
                 body: formData
             }
         );
-        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+        if (!response.ok){
+            alert(data.message);
+            return;
+        }
 
         alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
         location.href = '../../index.html';

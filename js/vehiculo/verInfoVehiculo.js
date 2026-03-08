@@ -45,6 +45,26 @@ async function cargarVehiculo(id) {
 
 function mostrarVehiculo(vehiculo) {
     const contenedor = document.getElementById('vehiculoDetalles');
+
+    let usuarioInfo = '';
+
+    if (vehiculo.usuario) {
+        // Siempre mostramos el nombre
+        usuarioInfo += `<p><strong>Nombre:</strong> ${vehiculo.usuario.nombre}</p>`;
+
+        // Si hay más campos, los mostramos
+        if (vehiculo.usuario.primerApellido) {
+            usuarioInfo += `
+                <p><strong>Primer Apellido:</strong> ${vehiculo.usuario.primerApellido}</p>
+                <p><strong>Segundo Apellido:</strong> ${vehiculo.usuario.segundoApellido}</p>
+                <p><strong>Teléfono:</strong> ${vehiculo.usuario.telefono}</p>
+                <p><strong>Correo:</strong> ${vehiculo.usuario.correo}</p>
+            `;
+        }
+    } else {
+        usuarioInfo = `<p>Vendedor no disponible</p>`;
+    }
+
     contenedor.innerHTML = `
         <div class="row g-3">
             <div class="col-md-6">
@@ -59,18 +79,13 @@ function mostrarVehiculo(vehiculo) {
                 <p><strong>Estado:</strong> ${vehiculo.estado || "Disponible"}</p>
                 <p><strong>Combustible:</strong> ${vehiculo.combustible}</p>
                 <p><strong>Color:</strong> ${vehiculo.color}</p>
-                <p><strong>Transmisión:</strong> ${vehiculo.Transmision}</p>
+                <p><strong>Transmisión:</strong> ${vehiculo.transmision}</p>
                 <p><strong>Condición:</strong> ${vehiculo.condicion}</p>
 
                 <hr>
                 <h5>Vendedor</h5>
-                <p><strong>Nombre:</strong> ${vehiculo.usuario.nombre}</p>
-                <p><strong>Email:</strong> ${vehiculo.usuario.primerApellido}</p>
-                <p><strong>Email:</strong> ${vehiculo.usuario.segundoApellido}</p>
-                <p><strong>Email:</strong> ${vehiculo.usuario.telefono}</p>
-                <p><strong>Email:</strong> ${vehiculo.usuario.correo}</p>
+                ${usuarioInfo}
                 <hr>
-                
             </div>
         </div>
     `;

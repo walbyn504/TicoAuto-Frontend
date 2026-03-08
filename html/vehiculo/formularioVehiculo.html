@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Formulario Vehículo</title>
@@ -11,51 +12,78 @@
     <!-- CSS personalizado -->
     <link rel="stylesheet" href="../../css/formularioVehiculo.css">
 </head>
+
 <body>
 
-<div class="container mt-5 mb-5 formulario-container">
+    <div class="container mt-5 mb-5 formulario-container">
 
-    <h1 class="mb-4 text-center">Formulario Vehículo</h1>
+        <h1 class="mb-4 text-center">Formulario Vehículo</h1>
 
-    <form id="formVehiculo" enctype="multipart/form-data">
-        <input type="hidden" id="vehiculoId">
+        <form id="formVehiculo" enctype="multipart/form-data">
+            <input type="hidden" id="vehiculoId">
 
-        <div class="mb-3">
-            <input type="text" id="marca" placeholder="Marca" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <input type="text" id="marca" placeholder="Marca" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <input type="text" id="modelo" placeholder="Modelo" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <input type="text" id="modelo" placeholder="Modelo" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <input type="number" id="anno" placeholder="Año" min="1886" max="2026" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <input type="number" id="anno" placeholder="Año" min="1886" max="2026" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <input type="number" id="precio" placeholder="Precio" min="0" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <input type="number" id="precio" placeholder="Precio" min="0" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <input type="file" id="imagen" accept="image/*" class="form-control">
-            <img id="vistaPrevia" class="img-fluid mt-3 rounded shadow" 
-                 style="max-height: 200px; display: none;">
-        </div>
+            <select id="combustible" class="form-control" required>
+                <option value="">Seleccione combustible</option>
+                <option value="Gas">Gas</option>
+                <option value="Disel">Disel</option>
+                <option value="Gasolina">Gasolina</option>
+            </select><br>
 
-        <div class="d-flex justify-content-end gap-3 mt-4">
-            <button type="button" class="btn btn-guardar px-4" onclick="guardarVehiculo()">
-                Guardar
-            </button>
-            <button type="button" class="btn btn-regresar px-4" onclick="regresar()">
-                Regresar
-            </button>
-        </div>
+            <div class="mb-3">
+                <input type="text" id="color" placeholder="Color" class="form-control" required>
+            </div>
 
-    </form>
+            <div class="mb-3">
+                <select id="transmision" class="form-control" required>
+                    <option value="">Seleccione transmision</option>
+                    <option value="Manual">Manual</option>
+                    <option value="Automatico">Automatico</option>
+                </select>
+            </div>
 
-</div>
+            <div class="mb-3">
+                <select id="condicion" class="form-control" required>
+                    <option value="">Seleccione la condición de su auto</option>
+                    <option value="Usado">Usado</option>
+                    <option value="Nuevo">Nuevo</option>
+                </select>
+            </div>
 
-<script src="../../js/vehiculo/formularioVehiculo.js" defer></script>
+            <div class="mb-3">
+                <input type="file" id="imagen" name="imagen" accept="image/*" class="form-control">
+                <img id="vistaPrevia" class="img-fluid mt-3 rounded shadow" style="max-height: 200px; display: none;">
+            </div>
 
+            <div class="d-flex justify-content-end gap-3 mt-4">
+                <button type="button" class="btn btn-guardar px-4" onclick="guardarVehiculo()">
+                    Guardar
+                </button>
+                <button type="button" class="btn btn-regresar px-4" onclick="regresar()">
+                    Regresar
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script src="../../js/vehiculo/formularioVehiculo.js" defer></script>
 </body>
+
 </html>
