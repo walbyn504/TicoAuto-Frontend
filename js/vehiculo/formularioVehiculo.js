@@ -105,7 +105,7 @@ async function guardarVehiculo() {
         }
 
         alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
-        location.href = '../../index.html';
+        location.href = '/html/vehiculo/gestionVehiculo.html';
     } catch {
         alert("No se pudo conectar al servidor ❌");
     }
