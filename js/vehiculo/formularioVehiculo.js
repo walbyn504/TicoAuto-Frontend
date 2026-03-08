@@ -96,7 +96,7 @@ async function guardarVehiculo() {
 
 // --- Regresar al índice ---
 function regresar() {
-    location.href = '../../index.html';
+    location.href = '/html/vehiculo/gestionVehiculo.html';
 }
 
 // --- Inicializar al cargar la página ---
