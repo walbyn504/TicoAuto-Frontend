@@ -55,7 +55,7 @@ function mostrarVehiculos(vehiculos) {
                     <div class="d-flex gap-2 mt-2">
 
                         <button class="btn btn-primary btn-sm flex-fill" onclick="verDetalles('${v._id}')">
-                            Ver Detalles
+                            Ver Detalle
                         </button>
 
                     </div>
@@ -148,6 +148,10 @@ async function ejecutarBusqueda() {
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
+}
+
+function verDetalles(id){
+    location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
 }
 
 function refrescar(){
