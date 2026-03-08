@@ -21,7 +21,7 @@ async function initVehiculo() {
 // --- Cargar vehículo para edición ---
 async function cargarVehiculo(id) {
     try {
-        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/edicion/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Error al cargar vehículo");
