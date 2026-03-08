@@ -53,11 +53,12 @@ function mostrarVehiculos(vehiculos) {
 
                     </p>
                     <div class="d-flex gap-2 mt-2">
-
                         <button class="btn btn-primary btn-sm flex-fill" onclick="verDetalles('${v._id}')">
                             Ver Detalle
                         </button>
-
+                        <button class="btn btn-secondary btn-sm flex-fill" onclick="copiarEnlace('${v._id}')">
+                            Copiar enlace
+                        </button>
                     </div>
                 </div>
             </div>
@@ -152,6 +153,21 @@ async function ejecutarBusqueda() {
 
 function verDetalles(id){
     location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
+}
+
+function copiarEnlace(id) {
+    try {
+        // Construir la URL completa del frontend
+        const enlace = `${window.location.origin}/html/vehiculo/verInfoVehiculo.html?id=${id}`;
+
+        // Copiar al portapapeles
+        navigator.clipboard.writeText(enlace);
+
+        alert("Enlace copiado al portapapeles ✅");
+    } catch (error) {
+        alert("No se pudo copiar el enlace ❌");
+        console.error(error);
+    }
 }
 
 function refrescar(){
