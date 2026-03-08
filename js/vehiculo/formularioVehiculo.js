@@ -1,10 +1,16 @@
 const apiBaseUrl = 'http://localhost:3001';
 const token = sessionStorage.getItem('token');
 
+
 // --- Función principal: inicializa la página ---
 async function initVehiculo() {
-    const id = sessionStorage.getItem('vehiculoId');
-    if (id) await cargarVehiculo(id);
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    if (id) {
+        cargarVehiculo(id);
+    }
+
 }
 
 // --- Cargar vehículo para edición ---
@@ -77,7 +83,6 @@ async function guardarVehiculo() {
         if (!response.ok) throw new Error();
 
         alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
-        sessionStorage.removeItem('vehiculoId');
         location.href = '../../index.html';
     } catch {
         alert("No se pudo conectar al servidor ❌");
@@ -86,7 +91,6 @@ async function guardarVehiculo() {
 
 // --- Regresar al índice ---
 function regresar() {
-    sessionStorage.removeItem('vehiculoId');
     location.href = '../../index.html';
 }
 
