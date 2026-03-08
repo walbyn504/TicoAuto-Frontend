@@ -67,14 +67,17 @@ function mostrarVehiculos(vehiculos) {
 }
 
 function verificarUsuario() {
-    const token = sessionStorage.getItem("token");
     const usuario = sessionStorage.getItem("usuario");
 
     const nombreCont = document.getElementById("nombreUsuario");
     const botonesCont = document.getElementById("botonesUsuario");
+    const menuCont = document.getElementById("menuOpciones");
 
-    if (!token || !usuario) {
+    if (!usuario) {
+
         nombreCont.innerHTML = "";
+        menuCont.innerHTML = "";
+
         botonesCont.innerHTML = `
             <a href="/html/usuario/inicioSesion.html" class="btn btn-outline-light me-2">
                 Iniciar Sesión
@@ -83,8 +86,28 @@ function verificarUsuario() {
                 Registrarse
             </a>
         `;
+
     } else {
+
         nombreCont.innerHTML = `👤 ${usuario}`;
+
+        // MENU DE 3 PUNTOS
+        menuCont.innerHTML = `
+            <div class="dropdown me-3">
+                <button class="btn btn-dark" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical fs-4"></i>
+                </button>
+
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" href="/html/vehiculo/gestionVehiculo.html">
+                            Gestionar Vehículos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        `;
+
         botonesCont.innerHTML = `
             <button onclick="cerrarSesion()" class="btn btn-outline-light">
                 Cerrar sesión
@@ -152,6 +175,10 @@ async function ejecutarBusqueda() {
 
 function verDetalles(id){
     location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
+}
+
+function gestion(id){
+    location.href = `html/vehiculo/gestionVehiculo.html?id=${id}`;
 }
 
 function copiarEnlace(id) {

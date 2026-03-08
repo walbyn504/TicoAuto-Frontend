@@ -5,15 +5,22 @@
 <title>TicoAuto - Buscador de Vehículos</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- ICONOS BOOTSTRAP -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 <link rel="stylesheet" href="css/filtroVehiculos.css">
 
 </head>
 
 <body>
 
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
 
+    <!-- MENU DE 3 PUNTOS -->
+    <div id="menuOpciones"></div>
+
+    <!-- LOGO -->
     <a class="navbar-brand" href="#">TicoAuto</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNav">
@@ -22,25 +29,15 @@
 
     <div class="collapse navbar-collapse" id="menuNav">
 
-        <!-- MENÚ -->
-        <ul class="navbar-nav me-auto">
+        <!-- CONTENIDO DERECHA -->
+        <div class="ms-auto d-flex align-items-center">
 
-            <li class="nav-item">
-                <a class="nav-link active" href="/index.html">Inicio</a>
-            </li>
+            <!-- USUARIO -->
+            <span class="text-white fs-5 me-3" id="nombreUsuario"></span>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/html/vehiculo/gestionVehiculo.html">
-                    Gestión de Vehículos
-                </a>
-            </li>
+            <div id="botonesUsuario"></div>
 
-        </ul>
-
-        <!-- USUARIO -->
-        <span class="text-white fs-5 me-3" id="nombreUsuario"></span>
-
-        <div id="botonesUsuario"></div>
+        </div>
 
     </div>
 
@@ -120,6 +117,9 @@
 </div>
 
 <script src="js/vehiculo/filtroVehiculos.js"></script>
+
+<!-- JS BOOTSTRAP (necesario para dropdown) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
