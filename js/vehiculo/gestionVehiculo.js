@@ -15,8 +15,15 @@ function verificarSesion() {
 }
 
 async function obtenerVehiculos() {
+
+    token = verificarSesion();
+    if (!token) return;
+
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculos`);
+        const res = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
         if (res.status === 200) {
             const vehiculos = await res.json();
             mostrarVehiculos(vehiculos);
@@ -27,6 +34,8 @@ async function obtenerVehiculos() {
         alert("No se pudo conectar al servidor ❌");
     }
 }
+
+
 
 function mostrarVehiculos(vehiculos) {
     const container = document.getElementById("vehiculosContainer");
@@ -45,7 +54,11 @@ function mostrarVehiculos(vehiculos) {
                     <p class="card-text">
                         <strong>Año:</strong> ${v.anno} <br>
                         <strong>Precio:</strong> $${v.precio} <br>
-                        <strong>Estado:</strong> ${v.estado || "Disponible"}
+                        <strong>Estado:</strong> ${v.estado} <br>
+                        <strong>Color:</strong> ${v.color} <br>
+                        <strong>Condición:</strong> ${v.condicion} <br>
+                        <strong>Combustible:</strong> ${v.combustible} <br>
+                        <strong>Transmisión:</strong> ${v.transmision} <br> 
                     </p>
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-primary btn-sm flex-fill" onclick="editarVehiculo('${v._id}')">
