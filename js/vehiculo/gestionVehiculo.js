@@ -16,7 +16,7 @@ function verificarSesion() {
 
 async function obtenerVehiculos() {
 
-    token = verificarSesion();
+    const token = verificarSesion();
     if (!token) return;
 
     try {
@@ -34,8 +34,6 @@ async function obtenerVehiculos() {
         alert("No se pudo conectar al servidor ❌");
     }
 }
-
-
 
 function mostrarVehiculos(vehiculos) {
     const container = document.getElementById("vehiculosContainer");
@@ -64,9 +62,17 @@ function mostrarVehiculos(vehiculos) {
                         <button class="btn btn-primary btn-sm flex-fill" onclick="editarVehiculo('${v._id}')">
                             Editar
                         </button>
+
                         <button class="btn btn-danger btn-sm flex-fill" onclick="eliminarVehiculo('${v._id}')">
                             Eliminar
                         </button>
+
+                            ${v.estado !== 'vendido' ? `
+                            <button class="btn btn-success btn-sm flex-fill" onclick="marcarVendido('${v._id}')">
+                                Vendido
+                            </button>
+                        ` : `
+                        `}
                     </div>
                 </div>
             </div>
@@ -110,6 +116,43 @@ async function eliminarVehiculo(id) {
             alert("Error al eliminar el vehículo ❌");
         }
 
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
+}
+
+
+function confirmarVendido() {
+    return confirm("¿Seguro que desea marcar como vendido este vehículo?");
+}
+
+async function marcarVendido(id) {
+
+
+    if (!confirmarVendido()) return;
+
+    const token = verificarSesion();
+    if (!token) return; 
+
+    try {
+        const res = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` }
+        }); 
+
+        if (res.status === 200) {
+            alert("Vehículo marcado como vendido ✅");
+            obtenerVehiculos();
+        } else if (res.status === 404) {
+            alert("El vehículo no existe ❌");
+        } else if (res.status === 401) {
+            alert("Sesión expirada ❌");
+            sessionStorage.removeItem("token");
+            location.href = "/html/usuario/inicioSesion.html";
+        } else {
+            const data = await res.json().catch(() => null);
+            alert(data?.message || "Error al marcar el vehículo como vendido ❌");
+        }
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
