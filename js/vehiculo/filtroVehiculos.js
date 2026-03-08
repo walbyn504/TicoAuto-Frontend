@@ -1,55 +1,34 @@
 const apiBaseUrl = 'http://localhost:3001';
-
 const token = sessionStorage.getItem('token');
+
+let paginaActual = 1;
+let totalPaginas = 1;
 
 // --- Función principal: inicializa la página ---
 async function initFiltroVehiculos() {
-    await cargarVehiculos(), verificarUsuario();
-
-}
-
-// --- Cargar vehículos para el filtro ---
-async function cargarVehiculos() {
-    try {
-        const response = await fetch(`${apiBaseUrl}/api/vehiculos`, {
-        });
-
-        const vehiculos = await response.json();
-
-        if (!response.ok){
-            alert (vehiculos.message);
-            return
-        }
-
-        mostrarVehiculos(vehiculos);
-    } catch (error) {
-        alert("No se pudieron cargar los vehículos ❌");
-    }
+    verificarUsuario();
+    await ejecutarBusqueda(1);
 }
 
 // --- Mostrar vehículos en cartas ---
 function mostrarVehiculos(vehiculos) {
     const contenedor = document.getElementById('vehiculosContainer');
-    contenedor.innerHTML = '';  
+    contenedor.innerHTML = '';
+
     vehiculos.forEach(v => {
         const card = document.createElement("div");
         card.className = "col-md-4 mb-4";
         card.innerHTML = `
             <div class="card h-100">
-
                 <img src="${apiBaseUrl}/imagenes/${v.imagen}" 
                      class="card-img-top" 
                      alt="${v.marca} ${v.modelo}">
                 <div class="card-body">
-
                     <h5 class="card-title">${v.marca} ${v.modelo}</h5>
-
                     <p class="card-text">
-
                         <strong>Año:</strong> ${v.anno} <br>
                         <strong>Precio:</strong> $${v.precio} <br>
                         <strong>Estado:</strong> ${v.estado || "Disponible"}
-
                     </p>
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-primary btn-sm flex-fill" onclick="verDetalles('${v._id}')">
@@ -74,7 +53,6 @@ function verificarUsuario() {
     const menuCont = document.getElementById("menuOpciones");
 
     if (!usuario) {
-
         nombreCont.innerHTML = "";
         menuCont.innerHTML = "";
 
@@ -86,12 +64,9 @@ function verificarUsuario() {
                 Registrarse
             </a>
         `;
-
     } else {
-
         nombreCont.innerHTML = `👤 ${usuario}`;
 
-        // MENU DE 3 PUNTOS
         menuCont.innerHTML = `
             <div class="dropdown me-3">
                 <button class="btn btn-dark" data-bs-toggle="dropdown">
@@ -117,8 +92,9 @@ function verificarUsuario() {
 }
 
 // --- Filtrar vehículos ---
-async function ejecutarBusqueda() {
+async function ejecutarBusqueda(page = paginaActual) {
     try {
+        paginaActual = page;
 
         const marca = document.getElementById('marca').value.trim();
         const modelo = document.getElementById('modelo').value.trim();
@@ -127,68 +103,77 @@ async function ejecutarBusqueda() {
         const precio_min = document.getElementById('minPrecio').value;
         const precio_max = document.getElementById('maxPrecio').value;
         const estado = document.getElementById('estado').value;
-         
-        // Construir query params dinámicamente
+
+        const limit = 3;
         const params = new URLSearchParams();
 
-        // Agregar parámetros (campos) que el usuario ha llenado
-        if (marca) {
-            params.append('marca', marca); 
-        }
-        if (modelo) {
-            params.append('modelo', modelo);
-        }
-        if (anno_min) {
-            params.append('anno_min', anno_min);
-        }
-        if (anno_max) {
-            params.append('anno_max', anno_max);
-        }
-        if (precio_min) {
-            params.append('precio_min', precio_min);
-        }
-        if (precio_max) {
-            params.append('precio_max', precio_max);
-        }
-        if (estado) {
-            params.append('estado', estado);
-        }
+        if (marca) params.append('marca', marca);
+        if (modelo) params.append('modelo', modelo);
+        if (anno_min) params.append('anno_min', anno_min);
+        if (anno_max) params.append('anno_max', anno_max);
+        if (precio_min) params.append('precio_min', precio_min);
+        if (precio_max) params.append('precio_max', precio_max);
+        if (estado) params.append('estado', estado);
+
+        params.append('page', paginaActual); //Agrega a la url la pagina 
+        params.append('limit', limit);
+
+        history.replaceState(null, "", "?" + params.toString());
 
         const response = await fetch(`${apiBaseUrl}/api/vehiculos/filtro?${params.toString()}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        const vehiculos = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-            limpiarCampos();
-           alert (vehiculos.message);
-           return
+            alert(data.message);
+            return;
         }
 
-        mostrarVehiculos(vehiculos);
+        if (!data.vehiculos || data.vehiculos.length === 0) {
+
+            document.getElementById('vehiculosContainer').innerHTML = '';
+
+            alert("No hay vehículos con los filtros aplicados");
+            return;
+        }
+
+        mostrarVehiculos(data.vehiculos);
+
+        // Respuesta del backend
+        paginaActual = data.paginaActual; // pagina real
+        totalPaginas = data.totalPaginas; // paginas totales
+
+        document.getElementById("numeroPagina").textContent = paginaActual;
 
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
 }
 
-function verDetalles(id){
-    location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
+function paginaSiguiente() {
+    if (paginaActual < totalPaginas) {
+        paginaActual++;
+        ejecutarBusqueda(paginaActual);
+    }
 }
 
-function gestion(id){
-    location.href = `html/vehiculo/gestionVehiculo.html?id=${id}`;
+function paginaAnterior() {
+    if (paginaActual > 1) {
+        paginaActual--;
+        ejecutarBusqueda(paginaActual);
+    }
+}
+
+function verDetalles(id) {
+    location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
 }
 
 function copiarEnlace(id) {
     try {
-        // Construir la URL completa del frontend
         const enlace = `${window.location.origin}/html/vehiculo/verInfoVehiculo.html?id=${id}`;
-
-        // Copiar al portapapeles
         navigator.clipboard.writeText(enlace);
-
         alert("Enlace copiado al portapapeles ✅");
     } catch (error) {
         alert("No se pudo copiar el enlace ❌");
@@ -196,22 +181,24 @@ function copiarEnlace(id) {
     }
 }
 
-function refrescar(){
+function refrescar() {
+    history.replaceState(null, "", window.location.pathname);
     limpiarCampos();
-    cargarVehiculos();
+    paginaActual = 1;
+    ejecutarBusqueda(1);
 }
 
-function limpiarCampos(){ 
-    document.getElementById ('marca').value = "";
-    document.getElementById ('modelo').value = "";
-    document.getElementById ('minAnno').value = "";
-    document.getElementById ('maxAnno').value = "";
-    document.getElementById ('minPrecio').value = "";
-    document.getElementById ('maxPrecio').value = "";
-    document.getElementById ('estado').value = "";
+function limpiarCampos() {
+    document.getElementById('marca').value = "";
+    document.getElementById('modelo').value = "";
+    document.getElementById('minAnno').value = "";
+    document.getElementById('maxAnno').value = "";
+    document.getElementById('minPrecio').value = "";
+    document.getElementById('maxPrecio').value = "";
+    document.getElementById('estado').value = "";
 }
 
-function cerrarSesion(){
+function cerrarSesion() {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("usuario");
     window.location.href = "/html/usuario/inicioSesion.html";
