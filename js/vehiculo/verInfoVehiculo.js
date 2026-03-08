@@ -79,7 +79,7 @@ function mostrarVehiculo(vehiculo) {
                 <p><strong>Estado:</strong> ${vehiculo.estado || "Disponible"}</p>
                 <p><strong>Combustible:</strong> ${vehiculo.combustible}</p>
                 <p><strong>Color:</strong> ${vehiculo.color}</p>
-                <p><strong>Transmisión:</strong> ${vehiculo.Transmision}</p>
+                <p><strong>Transmisión:</strong> ${vehiculo.transmision}</p>
                 <p><strong>Condición:</strong> ${vehiculo.condicion}</p>
 
                 <hr>
