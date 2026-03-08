@@ -12,7 +12,6 @@ async function initFiltroVehiculos() {
 async function cargarVehiculos() {
     try {
         const response = await fetch(`${apiBaseUrl}/api/vehiculos`, {
-            headers: { 'Authorization': `Bearer ${token}` }
         });
 
         const vehiculos = await response.json();
