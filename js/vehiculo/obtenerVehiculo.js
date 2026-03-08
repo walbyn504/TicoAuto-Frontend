@@ -59,8 +59,7 @@ function eliminarVehiculo(id) {
     
 }
 
-function cerrarSesion() {
-    sessionStorage.removeItem("token");
-    location.href = "/html/usuario/inicioSesion.html";
+function cerrar() {
+    location.href = "/index.html";
 }
 
