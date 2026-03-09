@@ -37,6 +37,11 @@ function mostrarVehiculos(vehiculos) {
                         <button class="btn btn-secondary btn-sm flex-fill" onclick="copiarEnlace('${v._id}')">
                             Copiar enlace
                         </button>
+
+                        <button class="btn btn-primary btn-sm flex-fill" onclick=>
+                            <i class="bi bi-chat-dots"></i> Chatear
+                        </button>
+
                     </div>
                 </div>
             </div>
