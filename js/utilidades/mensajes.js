@@ -39,7 +39,7 @@ function manejarRespuesta(status, accion) {
     }
 
     else {
-        alert("Error en el servidor ❌");
+        alert(data.message || "Error en el servidor ❌");
     }
 
 }

@@ -2,9 +2,28 @@ const apiBaseUrl = 'http://localhost:3001';
 
 window.onload = obtenerVehiculos;
 
+function verificarSesion() {
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+        alert("Debe iniciar sesión");
+        location.href = "/html/usuario/inicioSesion.html";
+        return null;
+    }
+
+    return token;
+}
+
 async function obtenerVehiculos() {
+
+    const token = verificarSesion();
+    if (!token) return;
+
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculos`);
+        const res = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
         if (res.status === 200) {
             const vehiculos = await res.json();
             mostrarVehiculos(vehiculos);
@@ -33,15 +52,27 @@ function mostrarVehiculos(vehiculos) {
                     <p class="card-text">
                         <strong>Año:</strong> ${v.anno} <br>
                         <strong>Precio:</strong> $${v.precio} <br>
-                        <strong>Estado:</strong> ${v.estado || "Disponible"}
+                        <strong>Estado:</strong> ${v.estado} <br>
+                        <strong>Color:</strong> ${v.color} <br>
+                        <strong>Condición:</strong> ${v.condicion} <br>
+                        <strong>Combustible:</strong> ${v.combustible} <br>
+                        <strong>Transmisión:</strong> ${v.transmision} <br> 
                     </p>
                     <div class="d-flex gap-2 mt-2">
                         <button class="btn btn-primary btn-sm flex-fill" onclick="editarVehiculo('${v._id}')">
                             Editar
                         </button>
+
                         <button class="btn btn-danger btn-sm flex-fill" onclick="eliminarVehiculo('${v._id}')">
                             Eliminar
                         </button>
+
+                            ${v.estado !== 'vendido' ? `
+                            <button class="btn btn-success btn-sm flex-fill" onclick="marcarVendido('${v._id}')">
+                                Vendido
+                            </button>
+                        ` : `
+                        `}
                     </div>
                 </div>
             </div>
@@ -55,8 +86,76 @@ function editarVehiculo(id) {
     
 }
 
-function eliminarVehiculo(id) {
-    
+function confirmarEliminacion() {
+    return confirm("¿Seguro que desea eliminar este vehículo?");
+}
+
+async function eliminarVehiculo(id) {
+
+    if (!confirmarEliminacion()) return;
+
+    const token = verificarSesion();
+    if (!token) return;
+
+    try {
+        const res = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (res.status === 200) {
+            alert("Vehículo eliminado correctamente ✅");
+            obtenerVehiculos();
+        }
+        else if (res.status === 404) {
+            alert("El vehículo no existe ❌");
+        }
+        else {
+            alert("Error al eliminar el vehículo ❌");
+        }
+
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
+}
+
+
+function confirmarVendido() {
+    return confirm("¿Seguro que desea marcar como vendido este vehículo?");
+}
+
+async function marcarVendido(id) {
+
+
+    if (!confirmarVendido()) return;
+
+    const token = verificarSesion();
+    if (!token) return; 
+
+    try {
+        const res = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` }
+        }); 
+
+        if (res.status === 200) {
+            alert("Vehículo marcado como vendido ✅");
+            obtenerVehiculos();
+        } else if (res.status === 404) {
+            alert("El vehículo no existe ❌");
+        } else if (res.status === 401) {
+            alert("Sesión expirada ❌");
+            sessionStorage.removeItem("token");
+            location.href = "/html/usuario/inicioSesion.html";
+        } else {
+            const data = await res.json().catch(() => null);
+            alert(data?.message || "Error al marcar el vehículo como vendido ❌");
+        }
+    } catch (error) {
+        alert("No se pudo conectar al servidor ❌");
+    }
 }
 
 function cerrar() {
