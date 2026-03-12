@@ -10,14 +10,16 @@ async function initFiltroVehiculos() {
     await ejecutarBusqueda(1);
 }
 
-// --- Mostrar vehículos en cartas ---
 function mostrarVehiculos(vehiculos) {
     const contenedor = document.getElementById('vehiculosContainer');
     contenedor.innerHTML = '';
 
+    const usuarioLogueado = sessionStorage.getItem("usuario");
+
     vehiculos.forEach(v => {
         const card = document.createElement("div");
         card.className = "col-md-4 mb-4";
+
         card.innerHTML = `
             <div class="card h-100">
                 <img src="${apiBaseUrl}/imagenes/${v.imagen}" 
@@ -37,10 +39,16 @@ function mostrarVehiculos(vehiculos) {
                         <button class="btn btn-secondary btn-sm flex-fill" onclick="copiarEnlace('${v._id}')">
                             Copiar enlace
                         </button>
+                        ${usuarioLogueado ? `
+                            <button class="btn btn-secondary btn-sm flex-fill" onclick="abrirPaginaPregunta('${v._id}')">
+                                Enviar Mensaje
+                            </button>
+                        ` : ""}
                     </div>
                 </div>
             </div>
         `;
+
         contenedor.appendChild(card);
     });
 }
@@ -79,6 +87,11 @@ function verificarUsuario() {
                             Gestionar Vehículos
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" href="/html/vehiculo/enviarPregunta.html">
+                            Imbox
+                        </a>
+                    </li>
                 </ul>
             </div>
         `;
@@ -115,7 +128,7 @@ async function ejecutarBusqueda(page = paginaActual) {
         if (precio_max) params.append('precio_max', precio_max);
         if (estado) params.append('estado', estado);
 
-        params.append('page', paginaActual); //Agrega a la url la pagina 
+        params.append('page', paginaActual); //Se agrega a la url la pagina 
         params.append('limit', limit);
 
         history.replaceState(null, "", "?" + params.toString());
@@ -128,17 +141,11 @@ async function ejecutarBusqueda(page = paginaActual) {
 
         if (!response.ok) {
             alert(data.message);
-            return;
-        }
-
-        if (!data.vehiculos || data.vehiculos.length === 0) {
-
             document.getElementById('vehiculosContainer').innerHTML = '';
-
-            alert("No hay vehículos con los filtros aplicados");
             return;
         }
 
+        // Devuelve los filtros aplicados
         mostrarVehiculos(data.vehiculos);
 
         // Respuesta del backend
@@ -179,6 +186,10 @@ function copiarEnlace(id) {
         alert("No se pudo copiar el enlace ❌");
         console.error(error);
     }
+}
+
+function abrirPaginaPregunta(vehiculoId){
+    window.location.href = `/html/vehiculo/enviarPregunta.html?vehiculoId=${vehiculoId}`;
 }
 
 function refrescar() {
