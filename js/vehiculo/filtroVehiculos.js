@@ -88,7 +88,7 @@ function verificarUsuario() {
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="/html/vehiculo/enviarPregunta.html">
+                        <a class="dropdown-item" href="html/conversacion/conversacion.html">
                             Imbox
                         </a>
                     </li>
@@ -189,7 +189,7 @@ function copiarEnlace(id) {
 }
 
 function abrirPaginaPregunta(vehiculoId){
-    window.location.href = `/html/vehiculo/enviarPregunta.html?vehiculoId=${vehiculoId}`;
+    window.location.href = `/html/conversacion/conversacion.html?vehiculoId=${vehiculoId}`;
 }
 
 function refrescar() {
