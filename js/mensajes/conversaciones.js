@@ -105,7 +105,7 @@ async function seleccionarConversacion(vehiculoId) {
     document.getElementById("textoPregunta").value = "";
 
     // Busca si ya existe una conversación cargada para ese vehículo
-    const conversacion = conversacionesAgrupadas[vehiculoId];
+    const conversacion = conversacionesAgrupadas[vehiculoSeleccionado];
 
     if (conversacion) {
         document.getElementById("encabezadoChat").textContent =
@@ -117,7 +117,7 @@ async function seleccionarConversacion(vehiculoId) {
 
     try {
         // Si no hay conversación, pide los datos del vehículo al backend
-        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoSeleccionado}`, {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
