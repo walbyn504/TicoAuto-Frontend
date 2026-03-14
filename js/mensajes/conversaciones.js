@@ -101,51 +101,39 @@ async function abrirConversacionInicial(conversaciones) {
 
 }
 
+
 async function seleccionarConversacion(vehiculoId) {
-    vehiculoSeleccionado = vehiculoId; //Vehiculo seleccionado
+
+    vehiculoSeleccionado = vehiculoId;
     document.getElementById("textoPregunta").value = "";
 
-    // Busca si ya existe una conversación cargada para ese vehículo
     const conversacion = conversacionesAgrupadas[vehiculoSeleccionado];
 
     if (conversacion) {
         document.getElementById("encabezadoChat").textContent =
             `${conversacion.propietario} - ${conversacion.marca} ${conversacion.modelo}`;
 
-        mostrarMensajes(conversacion.mensajes); // Muestra preguntas y respuestas
+        mostrarMensajes(conversacion.mensajes);
         return;
     }
 
-    try {
-        // Si no hay conversación, pide los datos del vehículo al backend
-        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoSeleccionado}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
+    // Consultar el vehículo al servidor
+    const vehiculo = await obtenerVehiculo(vehiculoSeleccionado);
 
-        const preguntasRecibidas = await response.json();
-
-        // Obtiene el objeto del vehículo
-        const vehiculo = preguntasRecibidas.vehiculo || preguntasRecibidas;
-
-        if (!response.ok || !vehiculo) {
-            document.getElementById("encabezadoChat").textContent = "Vehículo no encontrado";
-            document.getElementById("mensajesChat").innerHTML = "";
-            return;
-        }
-        const propietario = vehiculo.usuario.nombre;
-        document.getElementById("encabezadoChat").textContent =
-            `${propietario} - ${vehiculo.marca} ${vehiculo.modelo}`;
-
-        // No hay mensajes todavía
+    if (!vehiculo) {
+        document.getElementById("encabezadoChat").textContent = "Vehículo no encontrado";
         document.getElementById("mensajesChat").innerHTML = "";
-
-    } catch (error) {
-        alert("Ocurrió un error al cargar la conversación."); 
+        return;
     }
+
+    const propietario = vehiculo.usuario.nombre;
+
+    document.getElementById("encabezadoChat").textContent =
+        `${propietario} - ${vehiculo.marca} ${vehiculo.modelo}`;
+
+    document.getElementById("mensajesChat").innerHTML = "";
 }
+
 
 function mostrarMensajes(mensajes) {
     const contenedor = document.getElementById("mensajesChat"); //Mensajes del chat
@@ -171,3 +159,27 @@ function mostrarMensajes(mensajes) {
         }
     }
 }
+
+async function obtenerVehiculo(vehiculoId) {
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const vehiculo = await response.json();
+
+        if (!response.ok) {
+            return null;
+        }
+
+        return vehiculo;
+
+    } catch (error) {
+        alert("Error al obtener el vehículo.");
+        return null;
+    }
+}
+
