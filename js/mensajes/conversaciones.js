@@ -1,6 +1,7 @@
 async function cargarConversaciones() {
     try {
         const response = await fetch(`${apiBaseUrl}/api/pregunta/obtenerMisPreguntas`, {
+            method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
@@ -118,6 +119,7 @@ async function seleccionarConversacion(vehiculoId) {
     try {
         // Si no hay conversación, pide los datos del vehículo al backend
         const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoSeleccionado}`, {
+            method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
