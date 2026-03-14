@@ -58,7 +58,7 @@ async function mostrarListaConversaciones() {
     //Convierte el objeto a lista
     const conversaciones = Object.values(conversacionesAgrupadas);
 
-    // Recorre la lista
+    
     for (let i = 0; i < conversaciones.length; i++) {
         const c = conversaciones[i];
 
@@ -68,11 +68,12 @@ async function mostrarListaConversaciones() {
             ${c.propietario}
             ${c.marca} ${c.modelo}
         `;
+        
         //Selecciona la conversacion del vehiculo
         item.onclick = function () {
             seleccionarConversacion(c.vehiculoId);
         };
-        //Agrega a la lista
+       
         lista.appendChild(item);
     }
     //Muestra la conversacion del vehiculo 
@@ -87,11 +88,11 @@ async function abrirConversacionInicial(conversaciones) {
     if (vehiculoASeleccionar) {
         await seleccionarConversacion(vehiculoASeleccionar);
     } 
-    //Sino hay, muestra la primera posicion
+    //Cuando no hay conversaciones, muestra la primera posicion
     else if (conversaciones.length > 0) {
         await seleccionarConversacion(conversaciones[0].vehiculoId);
     } 
-    //Sino hay conversaciones (muestra vacío)
+
     else {
         document.getElementById("mensajesChat").innerHTML = "";
         document.getElementById("textoPregunta").value = "";
