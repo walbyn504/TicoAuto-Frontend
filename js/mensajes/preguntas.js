@@ -1,10 +1,10 @@
 async function enviarPregunta() {
 
-    // Obtiene el textarea y el texto escrito
+   
     const textarea = document.getElementById("textoPregunta");
     const texto = textarea.value.trim();
 
-    // Verifica que el usuario haya escrito algo
+    
     if (!texto) {
         alert("Debes escribir una pregunta.");
         return;
