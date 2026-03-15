@@ -49,7 +49,7 @@ async function ejecutarBusqueda(page = paginaActual) {
             return;
         }
         
-
+        // Si no hay vehículos, muestra un mensaje
         if (!data.vehiculos || data.vehiculos.length === 0) {
 
             // Primero limpia los vehículos que estaban en pantalla
