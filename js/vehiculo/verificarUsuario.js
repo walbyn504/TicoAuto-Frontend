@@ -26,6 +26,7 @@ function verificarUsuario() {
             <div class="dropdown me-3">
                 <button class="btn btn-dark" data-bs-toggle="dropdown">
                     <i class="bi bi-three-dots-vertical fs-4"></i>
+                    Menú
                 </button>
 
                 <ul class="dropdown-menu">
