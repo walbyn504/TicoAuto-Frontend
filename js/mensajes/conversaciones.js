@@ -192,25 +192,23 @@ async function seleccionarConversacion(conversacionId) {
 }
 
 
-
 function mostrarMensajes(mensajes) {
     const contenedor = document.getElementById("mensajesChat");
     contenedor.innerHTML = "";
 
-    mensajes.sort((a, b) => {
-        return new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta);
-    });
+    // Ordena por fecha de la pregunta
+    mensajes.sort((a, b) => new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta));
 
     let ultimoUsuario = null;
 
     for (let i = 0; i < mensajes.length; i++) {
         const item = mensajes[i];
 
+        // Mostrar pregunta del usuario con su nombre
         const usuarioPregunta = item.pregunta.usuario.nombre;
         const fechaPregunta = formatearFecha(item.pregunta.fechaPregunta);
 
         let nombreHTML = "";
-
         if (ultimoUsuario !== usuarioPregunta) {
             nombreHTML = `<div class="nombre">${usuarioPregunta}</div>`;
             ultimoUsuario = usuarioPregunta;
@@ -224,34 +222,25 @@ function mostrarMensajes(mensajes) {
             </div>
         `;
 
+        // Mostrar respuesta del propietario **sin nombre**
         if (item.respuesta) {
-
-            const usuarioRespuesta = item.respuesta.usuario?.nombre || "Propietario";
             const fechaRespuesta = formatearFecha(item.respuesta.fechaRespuesta);
-
-            let nombreRespuestaHTML = "";
-
-            if (ultimoUsuario !== usuarioRespuesta) {
-                nombreRespuestaHTML = `<div class="nombre">${usuarioRespuesta}</div>`;
-                ultimoUsuario = usuarioRespuesta;
-            }
-
             contenedor.innerHTML += `
                 <div class="mensaje-propietario mb-2">
-                    ${nombreRespuestaHTML}
                     <div class="burbuja propietario">${item.respuesta.respuesta}</div>
                     <div class="fecha">${fechaRespuesta}</div>
                 </div>
             `;
+            ultimoUsuario = null; // Para que el próximo mensaje de otro usuario muestre su nombre
         }
     }
 
+    // Mantener scroll abajo
     contenedor.scrollTop = contenedor.scrollHeight;
 }
 
 function formatearFecha(fecha) {
     const f = new Date(fecha);
-
     return f.toLocaleTimeString("es-CR", {
         hour: "2-digit",
         minute: "2-digit"
