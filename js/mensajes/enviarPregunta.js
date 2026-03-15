@@ -6,7 +6,31 @@ const vehiculoIdUrl = params.get("vehiculoId");
 
 //Variables globales
 let conversacionesAgrupadas = {};
-let vehiculoSeleccionado = null;
+let conversacionSeleccionada = null;
+let modoEnvio = "pregunta";
+let preguntaPendienteId = null;
+const usuarioLogueadoId = sessionStorage.getItem("usuarioId");
+
+async function enviarMensaje() {
+    if (modoEnvio === "pregunta") {
+        await enviarPregunta();
+        return;
+    }
+
+    if (modoEnvio === "respuesta") {
+        if (!preguntaPendienteId) {
+            alert("No hay preguntas pendientes por responder.");
+            return;
+        }
+
+        await enviarRespuesta(preguntaPendienteId);
+        return;
+    }
+}
+
+function volverPagina() {
+    window.history.back();
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     await cargarConversaciones();

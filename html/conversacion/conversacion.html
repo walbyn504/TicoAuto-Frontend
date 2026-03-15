@@ -14,59 +14,58 @@
 
 <body class="bg-light">
 
-    <div class="container mt-4">
-        <div class="row chat-wrapper bg-white">
+<div class="container mt-4">
+    <div class="row chat-wrapper bg-white">
 
-            <!-- Sidebar conversaciones -->
-            <div class="col-4 sidebar" id="listaConversaciones"></div>
+        <!-- Sidebar conversaciones -->
+        <div class="col-4 sidebar" id="listaConversaciones"></div>
 
-            <!-- Área del chat -->
-            <div class="col-8">
-                <div class="chat-area">
+        <!-- Área del chat -->
+        <div class="col-8">
+            <div class="chat-area">
 
-                    <!-- Encabezado del chat -->
-                    <div class="chat-header">
+                <!-- Encabezado -->
+                <div class="chat-header">
 
-                        <!-- Botón volver -->
-                        <button class="btn btn-light" onclick="volverPagina()" title="Volver">
-                            <i class="bi bi-arrow-left"></i>
-                        </button>
+                    <button class="btn btn-light" onclick="volverPagina()" title="Volver">
+                        <i class="bi bi-arrow-left"></i>
+                    </button>
 
-                        <!-- Título conversación -->
-                        <span id="encabezadoChat">
-                            No has iniciado una conversación
-                        </span>
-
-                    </div>
-
-                    <!-- Mensajes -->
-                    <div class="chat-body" id="mensajesChat"></div>
-
-                    <!-- Campo escribir mensaje -->
-                    <div class="chat-footer">
-                        <div class="input-group">
-                            <textarea id="textoPregunta" class="form-control" rows="2" placeholder="Escribe tu pregunta"></textarea>
-                            <button class="btn btn-primary" onclick="enviarPregunta()">Enviar</button>
-                        </div>
-                    </div>
+                    <span id="encabezadoChat">
+                        No has iniciado una conversación
+                    </span>
 
                 </div>
+
+                <!-- Mensajes -->
+                <div class="chat-body" id="mensajesChat"></div>
+
+                <!-- Escribir mensaje -->
+                <div class="chat-footer">
+                    <div class="input-group">
+                        <textarea id="textoPregunta"
+                                  class="form-control"
+                                  rows="2"
+                                  placeholder="Escribe tu pregunta"></textarea>
+
+                        <button class="btn btn-primary" onclick="enviarMensaje()">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+
             </div>
-
         </div>
+
     </div>
+</div>
 
-    <!-- Scripts -->
-    <script src="../../js/mensajes/enviarPregunta.js"></script>
-    <script src="../../js/mensajes/conversaciones.js"></script>
-    <script src="../../js/mensajes/preguntas.js"></script>
+<!-- Scripts -->
+<script src="../../js/mensajes/enviarPregunta.js"></script>
+<script src="../../js/mensajes/respuestas.js"></script>
+<script src="../../js/mensajes/preguntas.js"></script>
+<script src="../../js/mensajes/conversaciones.js"></script>
 
-    <script>
-        // Función para volver a la página anterior
-        function volverPagina() {
-            window.history.back();
-        }
-    </script>
 
 </body>
 </html>
