@@ -125,58 +125,88 @@ async function mostrarListaConversaciones() {
 
 //Decide que chat abrir cuando carga la pagina
 async function abrirConversacionInicial(conversaciones) {
-    //Determina que conversacion va abrir
-    const vehiculoASeleccionar = conversacionSeleccionada || vehiculoIdUrl;
 
-    // Abre la conversacion (vehiculo)
-    if (vehiculoASeleccionar) {
-        await seleccionarConversacion(vehiculoASeleccionar);
-    }
-    //Cuando no hay conversaciones, muestra la primera posicion
-    else if (conversaciones.length > 0) {
-        await seleccionarConversacion(conversaciones[0].conversacionId);
-    }
-    else {
-        document.getElementById("mensajesChat").innerHTML = "";
-        document.getElementById("textoPregunta").value = "";
-    }
-}
-
-async function seleccionarConversacion(conversacionId) {
-    conversacionSeleccionada = conversacionId;
-    document.getElementById("textoPregunta").value = "";
-
-    const conversacion = conversacionesAgrupadas[conversacionSeleccionada];
-
-    if (conversacion) {
-        document.getElementById("encabezadoChat").textContent =
-            `${conversacion.propietario} - ${conversacion.marca} ${conversacion.modelo}`;
-
-        mostrarMensajes(conversacion.mensajes);
-
-        const esPropietario = usuarioLogueadoId === conversacion.propietarioId;
-
-        if (esPropietario) {
-            const preguntaSinRespuesta = conversacion.mensajes.find(
-                mensaje => !mensaje.respuesta
-            );
-
-            if (preguntaSinRespuesta) {
-                modoEnvio = "respuesta";
-                preguntaPendienteId = preguntaSinRespuesta.pregunta._id;
-            } else {
-                modoEnvio = "sinAccion";
-                preguntaPendienteId = null;
-            }
-        } else {
-            modoEnvio = "pregunta";
-            preguntaPendienteId = null;
-        }
-
+    if (conversacionSeleccionada) {
+        await seleccionarConversacion(conversacionSeleccionada);
         return;
     }
 
-    const vehiculoId = conversacionId.split(" - ")[0];
+    if (vehiculoIdUrl) {
+
+        // Buscar si ya existe conversación para ese vehículo
+        for (let i = 0; i < conversaciones.length; i++) {
+            if (conversaciones[i].vehiculoId === vehiculoIdUrl) {
+                await seleccionarConversacion(conversaciones[i].conversacionId);
+                return;
+            }
+        }
+
+        // Si no existe conversación todavía
+        await seleccionarConversacion(vehiculoIdUrl);
+        return;
+    }
+
+    if (conversaciones.length > 0) {
+        await seleccionarConversacion(conversaciones[0].conversacionId);
+        return;
+    }
+
+    // Si no hay conversaciones
+    document.getElementById("mensajesChat").innerHTML = "";
+    document.getElementById("textoPregunta").value = "";
+}
+
+async function seleccionarConversacion(conversacionId) {
+
+    conversacionSeleccionada = conversacionId;
+    document.getElementById("textoPregunta").value = "";
+
+    const conversacion = conversacionesAgrupadas[conversacionId];
+
+    // Si ya existe conversación
+    if (conversacion) {
+        mostrarConversacionExistente(conversacion);
+        return;
+    }
+
+    // Si aún no existe conversación
+    await mostrarVehiculoSinConversacion(conversacionId);
+}
+
+function mostrarConversacionExistente(conversacion) {
+
+    document.getElementById("encabezadoChat").textContent =
+        conversacion.propietario + " - " + conversacion.marca + " " + conversacion.modelo;
+
+    mostrarMensajes(conversacion.mensajes);
+
+    const esPropietario = usuarioLogueadoId === conversacion.propietarioId;
+
+    if (esPropietario) {
+
+        for (let i = 0; i < conversacion.mensajes.length; i++) {
+            if (!conversacion.mensajes[i].respuesta) {
+                preguntaSinRespuesta = conversacion.mensajes[i];
+                break;
+            }
+        }
+
+        if (preguntaSinRespuesta) {
+            modoEnvio = "respuesta";
+            preguntaPendienteId = preguntaSinRespuesta.pregunta._id;
+        } else {
+            modoEnvio = "sinAccion";
+            preguntaPendienteId = null;
+        }
+
+    } else {
+        modoEnvio = "pregunta";
+        preguntaPendienteId = null;
+    }
+}
+
+async function mostrarVehiculoSinConversacion(vehiculoId) {
+
     const vehiculo = await obtenerVehiculo(vehiculoId);
 
     if (!vehiculo) {
@@ -186,9 +216,17 @@ async function seleccionarConversacion(conversacionId) {
     }
 
     document.getElementById("encabezadoChat").textContent =
-        `${vehiculo.usuario.nombre} - ${vehiculo.marca} ${vehiculo.modelo}`;
+        vehiculo.usuario.nombre + " - " + vehiculo.marca + " " + vehiculo.modelo;
 
     document.getElementById("mensajesChat").innerHTML = "";
+
+    if (usuarioLogueadoId === vehiculo.usuario._id) {
+        modoEnvio = "sinAccion";
+    } else {
+        modoEnvio = "pregunta";
+    }
+
+    preguntaPendienteId = null;
 }
 
 function mostrarMensajes(mensajes) {
