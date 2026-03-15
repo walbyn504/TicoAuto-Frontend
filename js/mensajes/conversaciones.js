@@ -197,40 +197,76 @@ async function seleccionarConversacion(conversacionId) {
     document.getElementById("mensajesChat").innerHTML = "";
 }
 
+
+
 function mostrarMensajes(mensajes) {
-    const contenedor = document.getElementById("mensajesChat"); //Mensajes del chat
+    const contenedor = document.getElementById("mensajesChat");
     contenedor.innerHTML = "";
 
-    // Ordena los mensajes por la fecha de la pregunta (de más vieja a más nueva)
     mensajes.sort((a, b) => {
         return new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta);
     });
 
-    // Recorre todos los mensajes de la conversación
+    let ultimoUsuario = null;
+
     for (let i = 0; i < mensajes.length; i++) {
         const item = mensajes[i];
 
-        // Muestra la pregunta del usuario interesado
+        const usuarioPregunta = item.pregunta.usuario.nombre;
+        const fechaPregunta = formatearFecha(item.pregunta.fechaPregunta);
+
+        let nombreHTML = "";
+
+        if (ultimoUsuario !== usuarioPregunta) {
+            nombreHTML = `<div class="nombre">${usuarioPregunta}</div>`;
+            ultimoUsuario = usuarioPregunta;
+        }
+
         contenedor.innerHTML += `
             <div class="mensaje-usuario mb-2">
+                ${nombreHTML}
                 <div class="burbuja usuario">${item.pregunta.pregunta}</div>
+                <div class="fecha">${fechaPregunta}</div>
             </div>
         `;
 
-        // Si existe respuesta del propietario, la muestra
         if (item.respuesta) {
+
+            const usuarioRespuesta = item.respuesta.usuario?.nombre || "Propietario";
+            const fechaRespuesta = formatearFecha(item.respuesta.fechaRespuesta);
+
+            let nombreRespuestaHTML = "";
+
+            if (ultimoUsuario !== usuarioRespuesta) {
+                nombreRespuestaHTML = `<div class="nombre">${usuarioRespuesta}</div>`;
+                ultimoUsuario = usuarioRespuesta;
+            }
+
             contenedor.innerHTML += `
                 <div class="mensaje-propietario mb-2">
+                    ${nombreRespuestaHTML}
                     <div class="burbuja propietario">${item.respuesta.respuesta}</div>
+                    <div class="fecha">${fechaRespuesta}</div>
                 </div>
             `;
         }
     }
+
+    contenedor.scrollTop = contenedor.scrollHeight;
 }
 
-async function obtenerVehiculo(conversacionesId) {
+function formatearFecha(fecha) {
+    const f = new Date(fecha);
+
+    return f.toLocaleTimeString("es-CR", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+async function obtenerVehiculo(vehiculoId) {
     try {
-        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${conversacionesId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
