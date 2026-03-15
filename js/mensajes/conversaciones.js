@@ -1,3 +1,11 @@
+function mostrarUsuarioConectado() {
+    const elementoNombre = document.getElementById("nombreUsuarioConectado");
+
+    if (elementoNombre) {
+        elementoNombre.textContent = nombre || "Usuario conectado";
+    }
+}
+
 async function cargarConversaciones() {
     try {
         const [responseMisPreguntas, responsePreguntasDeMisVehiculos] = await Promise.all([
@@ -107,8 +115,8 @@ async function mostrarListaConversaciones() {
         const item = document.createElement("div");
         item.className = "chat-item";
         item.innerHTML = `
-            ${c.propietario}
-            ${c.marca} ${c.modelo} 
+            <strong>${c.propietario}</strong>
+            <small>${c.marca} ${c.modelo}</small>
         `;
 
         //Selecciona la conversacion del vehiculo
@@ -157,19 +165,26 @@ async function abrirConversacionInicial(conversaciones) {
 }
 
 async function seleccionarConversacion(conversacionId) {
-
     conversacionSeleccionada = conversacionId;
     document.getElementById("textoPregunta").value = "";
 
+    const items = document.querySelectorAll(".chat-item");
+    items.forEach(item => item.classList.remove("activo"));
+
     const conversacion = conversacionesAgrupadas[conversacionId];
 
-    // Si ya existe conversación
     if (conversacion) {
+        const conversaciones = Object.values(conversacionesAgrupadas);
+        const index = conversaciones.findIndex(c => c.conversacionId === conversacionId);
+
+        if (index !== -1 && items[index]) {
+            items[index].classList.add("activo");
+        }
+
         mostrarConversacionExistente(conversacion);
         return;
     }
 
-    // Si aún no existe conversación
     await mostrarVehiculoSinConversacion(conversacionId);
 }
 
@@ -219,7 +234,14 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
     document.getElementById("encabezadoChat").textContent =
         vehiculo.usuario.nombre + " - " + vehiculo.marca + " " + vehiculo.modelo;
 
-    document.getElementById("mensajesChat").innerHTML = "";
+    document.getElementById("mensajesChat").innerHTML = `
+    <div class="chat-vacio">
+        <div>
+            <i class="bi bi-chat-dots fs-1 d-block mb-2"></i>
+            Aún no tienes conversaciones disponibles.
+        </div>
+    </div>
+`;
 
     if (usuarioLogueadoId === vehiculo.usuario._id) {
         modoEnvio = "sinAccion";
@@ -261,26 +283,30 @@ function mostrarMensajes(mensajes) {
             </div>
         `;
 
-        // Mostrar respuesta del propietario **sin nombre**
+        // Mostrar respuesta del propietario con su nombre
         if (item.respuesta) {
+            const nombreRespuesta = conversacionesAgrupadas[conversacionSeleccionada].propietario;
             const fechaRespuesta = formatearFecha(item.respuesta.fechaRespuesta);
             contenedor.innerHTML += `
-                <div class="mensaje-propietario mb-2">
-                    <div class="burbuja propietario">${item.respuesta.respuesta}</div>
-                    <div class="fecha">${fechaRespuesta}</div>
-                </div>
-            `;
-            ultimoUsuario = null; // Para que el próximo mensaje de otro usuario muestre su nombre
+            <div class="mensaje-propietario mb-2">
+                <div class="nombre">${nombreRespuesta}</div>
+                <div class="burbuja propietario">${item.respuesta.respuesta}</div>
+                <div class="fecha">${fechaRespuesta}</div>
+            </div> `;
+
+            ultimoUsuario = null;
         }
     }
 
-    // Mantener scroll abajo
-    contenedor.scrollTop = contenedor.scrollHeight;
 }
 
 function formatearFecha(fecha) {
     const f = new Date(fecha);
-    return f.toLocaleTimeString("es-CR", {
+
+    return f.toLocaleString("es-CR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
         hour: "2-digit",
         minute: "2-digit"
     });
