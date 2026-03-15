@@ -12,14 +12,15 @@ async function enviarPregunta() {
         return;
     }
 
+    let vehiculoId = null;
+
     const conversacion = conversacionesAgrupadas[conversacionSeleccionada];
 
-    if (!conversacion) {
-        alert("No se encontró la conversación seleccionada.");
-        return;
+    if (conversacion) {
+        vehiculoId = conversacion.vehiculoId;
+    } else {
+        vehiculoId = conversacionSeleccionada;
     }
-
-    const vehiculoId = conversacion.vehiculoId;
 
     try {
         const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoId}/pregunta`, {
@@ -36,12 +37,19 @@ async function enviarPregunta() {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.message || data.mensaje || "Error al enviar pregunta.");
+            alert(data.message);
             return;
         }
 
         textarea.value = "";
         await cargarConversaciones();
+
+        // Después de guardar, ya debería existir la conversación real
+        const nuevaConversacionId = `${vehiculoId} - ${usuarioLogueadoId}`;
+
+        if (conversacionesAgrupadas[nuevaConversacionId]) {
+            await seleccionarConversacion(nuevaConversacionId);
+        }
 
     } catch (error) {
         console.error(error);
