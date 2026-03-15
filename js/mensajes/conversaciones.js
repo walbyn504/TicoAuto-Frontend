@@ -229,35 +229,60 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
     preguntaPendienteId = null;
 }
 
+
 function mostrarMensajes(mensajes) {
-    const contenedor = document.getElementById("mensajesChat"); //Mensajes del chat
+    const contenedor = document.getElementById("mensajesChat");
     contenedor.innerHTML = "";
 
-    // Ordena los mensajes por la fecha de la pregunta (de más vieja a más nueva)
-    mensajes.sort((a, b) => {
-        return new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta);
-    });
+    // Ordena por fecha de la pregunta
+    mensajes.sort((a, b) => new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta));
 
-    // Recorre todos los mensajes de la conversación
+    let ultimoUsuario = null;
+
     for (let i = 0; i < mensajes.length; i++) {
         const item = mensajes[i];
 
-        // Muestra la pregunta del usuario interesado
+        // Mostrar pregunta del usuario con su nombre
+        const usuarioPregunta = item.pregunta.usuario.nombre;
+        const fechaPregunta = formatearFecha(item.pregunta.fechaPregunta);
+
+        let nombreHTML = "";
+        if (ultimoUsuario !== usuarioPregunta) {
+            nombreHTML = `<div class="nombre">${usuarioPregunta}</div>`;
+            ultimoUsuario = usuarioPregunta;
+        }
+
         contenedor.innerHTML += `
             <div class="mensaje-usuario mb-2">
+                ${nombreHTML}
                 <div class="burbuja usuario">${item.pregunta.pregunta}</div>
+                <div class="fecha">${fechaPregunta}</div>
             </div>
         `;
 
-        // Si existe respuesta del propietario, la muestra
+        // Mostrar respuesta del propietario **sin nombre**
         if (item.respuesta) {
+            const fechaRespuesta = formatearFecha(item.respuesta.fechaRespuesta);
             contenedor.innerHTML += `
                 <div class="mensaje-propietario mb-2">
                     <div class="burbuja propietario">${item.respuesta.respuesta}</div>
+                    <div class="fecha">${fechaRespuesta}</div>
                 </div>
             `;
+            ultimoUsuario = null; // Para que el próximo mensaje de otro usuario muestre su nombre
         }
     }
+
+    // Mantener scroll abajo
+    contenedor.scrollTop = contenedor.scrollHeight;
+}
+
+function formatearFecha(fecha) {
+    const f = new Date(fecha);
+    return f.toLocaleTimeString("es-CR", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
 }
 
 async function obtenerVehiculo(vehiculoId) {
