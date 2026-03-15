@@ -99,3 +99,20 @@ h1 {
     color: black;
     transform: translateY(-2px);
 }
+
+/* Combo box */
+select.form-control {
+    background: rgba(255,255,255,0.08);
+    color: white;
+}
+
+/* Opciones dentro del combo */
+select.form-control option {
+    background: #1f2937;
+    color: white;
+}
+
+
+select.form-control {
+    appearance: none;
+}
