@@ -27,7 +27,7 @@ async function enviarPregunta() {
         }
         textarea.value = "";
         alert("Mensaje enviado");
-        window.location.href = "/index.html";
+        window.location.reload();
 
     } catch (error) {
         console.error(error);
