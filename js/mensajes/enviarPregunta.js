@@ -11,6 +11,7 @@ let modoEnvio = "pregunta";
 let preguntaPendienteId = null;
 let preguntaSinRespuesta = null;
 const usuarioLogueadoId = sessionStorage.getItem("usuarioId");
+const nombre = sessionStorage.getItem("usuario");
 
 async function enviarMensaje() {
     if (modoEnvio === "pregunta") {
@@ -35,4 +36,5 @@ function volverPagina() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     await cargarConversaciones();
+    mostrarUsuarioConectado()
 });
