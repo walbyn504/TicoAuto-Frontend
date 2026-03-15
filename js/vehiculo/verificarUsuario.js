@@ -1,6 +1,4 @@
 
-const apiBaseUrl = 'http://localhost:3001';
-const token = sessionStorage.getItem('token');
 
 function verificarUsuario() {
     const usuario = sessionStorage.getItem("usuario");
