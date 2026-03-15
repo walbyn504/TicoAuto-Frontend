@@ -25,6 +25,7 @@ async function iniciarSesion() {
             // Guardar el token en sessionStorage
             sessionStorage.setItem('token', data.token);
             sessionStorage.setItem('usuario', data.nombre);
+            sessionStorage.setItem('usuarioId', data.usuarioId);
             alert("Inicio de sesión exitoso ✅");
             location.href = '../../index.html';
         }
