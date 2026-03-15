@@ -15,10 +15,14 @@ function mostrarVehiculos(vehiculos) {
     contenedor.innerHTML = '';
 
     const usuarioLogueado = sessionStorage.getItem("usuario");
+    const usuarioLogueadoId = sessionStorage.getItem("usuarioId");
+
 
     vehiculos.forEach(v => {
         const card = document.createElement("div");
         card.className = "col-md-4 mb-4";
+
+        const esMiVehiculo = usuarioLogueadoId === v.usuario;
 
         card.innerHTML = `
             <div class="card h-100">
@@ -39,7 +43,7 @@ function mostrarVehiculos(vehiculos) {
                         <button class="btn btn-secondary btn-sm flex-fill" onclick="copiarEnlace('${v._id}')">
                             Copiar enlace
                         </button>
-                        ${usuarioLogueado ? `
+                        ${usuarioLogueado && !esMiVehiculo ? `
                             <button class="btn btn-secondary btn-sm flex-fill" onclick="abrirPaginaPregunta('${v._id}')">
                                 Enviar Mensaje
                             </button>
@@ -191,6 +195,7 @@ function copiarEnlace(id) {
 function abrirPaginaPregunta(vehiculoId){
     window.location.href = `/html/conversacion/conversacion.html?vehiculoId=${vehiculoId}`;
 }
+
 
 function refrescar() {
     history.replaceState(null, "", window.location.pathname);
