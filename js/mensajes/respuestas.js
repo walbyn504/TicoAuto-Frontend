@@ -24,7 +24,7 @@ async function enviarRespuesta(preguntaId) {
         const data = await response.json();
 
         if (!response.ok) {
-            alert(data.mensaje);
+            alert(data.message);
             return;
         }
 
