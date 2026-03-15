@@ -25,7 +25,7 @@ function verificarUsuario() {
         menuCont.innerHTML = `
             <div class="dropdown me-3">
                 <button class="btn btn-dark" data-bs-toggle="dropdown">
-                    <i class="bi bi-three-dots-vertical fs-4"></i>
+                    <i class="bi bi-three-dots-vertical"></i>
                     Menú
                 </button>
 

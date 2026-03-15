@@ -66,27 +66,39 @@ function mostrarVehiculo(vehiculo) {
     }
 
     contenedor.innerHTML = `
-        <div class="row g-3">
-            <div class="col-md-6">
-                <img src="${apiBaseUrl}/imagenes/${vehiculo.imagen}" 
-                     class="img-fluid rounded" 
-                     alt="${vehiculo.marca} ${vehiculo.modelo}">
-            </div>
-            <div class="col-md-6">
-                <h3>${vehiculo.marca} ${vehiculo.modelo}</h3>
-                <p><strong>Año:</strong> ${vehiculo.anno}</p>
-                <p><strong>Precio:</strong> $${vehiculo.precio}</p>
-                <p><strong>Estado:</strong> ${vehiculo.estado || "Disponible"}</p>
-                <p><strong>Combustible:</strong> ${vehiculo.combustible}</p>
-                <p><strong>Color:</strong> ${vehiculo.color}</p>
-                <p><strong>Transmisión:</strong> ${vehiculo.transmision}</p>
-                <p><strong>Condición:</strong> ${vehiculo.condicion}</p>
+        <div class="detalle-vehiculo">
+        
+        <button class="btn-volver" onclick="volver()">
+            →
+        </button>
 
-                <hr>
-                <h5>Vendedor</h5>
-                ${usuarioInfo}
-                <hr>
+            <h1 class="detalle-titulo">${vehiculo.marca} ${vehiculo.modelo}</h1>
+            <div class="detalle-precio">$${vehiculo.precio}</div>
+
+            <div class="detalle-imagen-contenedor">
+                <img 
+                    src="${apiBaseUrl}/imagenes/${vehiculo.imagen}" 
+                    class="detalle-imagen" 
+                    alt="${vehiculo.marca} ${vehiculo.modelo}">
             </div>
+
+            <div class="detalle-grid">
+                <div class="detalle-seccion">
+                    <h4 class="detalle-subtitulo">Información del vehículo</h4>
+                    <p><strong>Año:</strong> ${vehiculo.anno}</p>
+                    <p><strong>Estado:</strong> ${vehiculo.estado || "Disponible"}</p>
+                    <p><strong>Combustible:</strong> ${vehiculo.combustible}</p>
+                    <p><strong>Color:</strong> ${vehiculo.color}</p>
+                    <p><strong>Transmisión:</strong> ${vehiculo.transmision}</p>
+                    <p><strong>Condición:</strong> ${vehiculo.condicion}</p>
+                </div>
+
+                <div class="detalle-seccion">
+                    <h4 class="detalle-subtitulo">Información del vendedor</h4>
+                    ${usuarioInfo}
+                </div>
+            </div>
+
         </div>
     `;
 }
