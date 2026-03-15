@@ -143,7 +143,6 @@ async function abrirConversacionInicial(conversaciones) {
 }
 
 async function seleccionarConversacion(conversacionId) {
-
     conversacionSeleccionada = conversacionId;
     document.getElementById("textoPregunta").value = "";
 
@@ -155,11 +154,9 @@ async function seleccionarConversacion(conversacionId) {
 
         mostrarMensajes(conversacion.mensajes);
 
-        // Determina si el usuario logueado es el propietario del vehículo
         const esPropietario = usuarioLogueadoId === conversacion.propietarioId;
 
         if (esPropietario) {
-            // Busca una pregunta sin respuesta para que el propietario la responda
             const preguntaSinRespuesta = conversacion.mensajes.find(
                 mensaje => !mensaje.respuesta
             );
@@ -172,7 +169,6 @@ async function seleccionarConversacion(conversacionId) {
                 preguntaPendienteId = null;
             }
         } else {
-            // Si no es el propietario, entonces es el interesado y puede preguntar
             modoEnvio = "pregunta";
             preguntaPendienteId = null;
         }
@@ -180,8 +176,8 @@ async function seleccionarConversacion(conversacionId) {
         return;
     }
 
-    // Consultar el vehículo al servidor
-    const vehiculo = await obtenerVehiculo(conversacionSeleccionada);
+    const vehiculoId = conversacionId.split(" - ")[0];
+    const vehiculo = await obtenerVehiculo(vehiculoId);
 
     if (!vehiculo) {
         document.getElementById("encabezadoChat").textContent = "Vehículo no encontrado";
@@ -189,10 +185,8 @@ async function seleccionarConversacion(conversacionId) {
         return;
     }
 
-    const propietario = vehiculo.usuario.nombre;
-
     document.getElementById("encabezadoChat").textContent =
-        `${propietario} - ${vehiculo.marca} ${vehiculo.modelo}`;
+        `${vehiculo.usuario.nombre} - ${vehiculo.marca} ${vehiculo.modelo}`;
 
     document.getElementById("mensajesChat").innerHTML = "";
 }
