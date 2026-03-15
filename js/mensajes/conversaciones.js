@@ -67,6 +67,7 @@ function agruparConversacionesPorVehiculo(preguntasRecibidas) {
         // Si aún no existe una conversación para ese vehículo, la crea
         if (!conversacionesAgrupadas[conversacionId]) {
             conversacionesAgrupadas[conversacionId] = {
+                conversacionId: conversacionId,
                 vehiculoId: vehiculo._id,
                 propietarioId: vehiculo.usuario._id,
                 propietario: vehiculo.usuario.nombre,
@@ -112,7 +113,7 @@ async function mostrarListaConversaciones() {
 
         //Selecciona la conversacion del vehiculo
         item.onclick = function () {
-            seleccionarConversacion(c.vehiculoId);
+            seleccionarConversacion(c.conversacionId);
         };
 
         lista.appendChild(item);
@@ -125,7 +126,7 @@ async function mostrarListaConversaciones() {
 //Decide que chat abrir cuando carga la pagina
 async function abrirConversacionInicial(conversaciones) {
     //Determina que conversacion va abrir
-    const vehiculoASeleccionar = vehiculoSeleccionado || vehiculoIdUrl;
+    const vehiculoASeleccionar = conversacionSeleccionada || vehiculoIdUrl;
 
     // Abre la conversacion (vehiculo)
     if (vehiculoASeleccionar) {
@@ -133,7 +134,7 @@ async function abrirConversacionInicial(conversaciones) {
     }
     //Cuando no hay conversaciones, muestra la primera posicion
     else if (conversaciones.length > 0) {
-        await seleccionarConversacion(conversaciones[0].vehiculoId);
+        await seleccionarConversacion(conversaciones[0].conversacionId);
     }
     else {
         document.getElementById("mensajesChat").innerHTML = "";
@@ -141,12 +142,12 @@ async function abrirConversacionInicial(conversaciones) {
     }
 }
 
-async function seleccionarConversacion(vehiculoId) {
+async function seleccionarConversacion(conversacionId) {
 
-    vehiculoSeleccionado = vehiculoId;
+    conversacionSeleccionada = conversacionId;
     document.getElementById("textoPregunta").value = "";
 
-    const conversacion = conversacionesAgrupadas[vehiculoSeleccionado];
+    const conversacion = conversacionesAgrupadas[conversacionSeleccionada];
 
     if (conversacion) {
         document.getElementById("encabezadoChat").textContent =
@@ -180,7 +181,7 @@ async function seleccionarConversacion(vehiculoId) {
     }
 
     // Consultar el vehículo al servidor
-    const vehiculo = await obtenerVehiculo(vehiculoSeleccionado);
+    const vehiculo = await obtenerVehiculo(conversacionSeleccionada);
 
     if (!vehiculo) {
         document.getElementById("encabezadoChat").textContent = "Vehículo no encontrado";
@@ -227,9 +228,9 @@ function mostrarMensajes(mensajes) {
     }
 }
 
-async function obtenerVehiculo(vehiculoId) {
+async function obtenerVehiculo(conversacionesId) {
     try {
-        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${vehiculoId}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${conversacionesId}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
