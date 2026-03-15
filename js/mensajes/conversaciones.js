@@ -1,19 +1,42 @@
 async function cargarConversaciones() {
     try {
-        const response = await fetch(`${apiBaseUrl}/api/pregunta/obtenerMisPreguntas`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        });
-        const preguntasRecibidas = await response.json();
+        const [responseMisPreguntas, responsePreguntasDeMisVehiculos] = await Promise.all([
+            fetch(`${apiBaseUrl}/api/pregunta/obtenerMisPreguntas`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }),
+            fetch(`${apiBaseUrl}/api/obtenerPreguntasDeMisVehiculos`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+        ]);
 
-        if (!response.ok) {
-            alert(preguntasRecibidas.mensaje);
+        const misPreguntas = await responseMisPreguntas.json();
+        const preguntasDeMisVehiculos = await responsePreguntasDeMisVehiculos.json();
+
+        if (!responseMisPreguntas.ok) {
+            alert(misPreguntas.mensaje);
             return;
         }
+
+        if (!responsePreguntasDeMisVehiculos.ok) {
+            alert(preguntasDeMisVehiculos.mensaje);
+            return;
+        }
+
+        const todasLasPreguntas = [
+            ...misPreguntas,
+            ...preguntasDeMisVehiculos
+        ];
+
+        conversacionesAgrupadas = {};
+
         // Agrupa las preguntas por vehículo para formar conversaciones
-        agruparConversacionesPorVehiculo(preguntasRecibidas);
+        agruparConversacionesPorVehiculo(todasLasPreguntas);
         await mostrarListaConversaciones(); // Muestra la lista de conversaciones
 
     } catch (error) {
@@ -29,29 +52,47 @@ function agruparConversacionesPorVehiculo(preguntasRecibidas) {
     for (let i = 0; i < preguntasRecibidas.length; i++) {
         const item = preguntasRecibidas[i];
 
+        // Valida que exista la pregunta y el vehículo
+        if (!item.pregunta || !item.pregunta.vehiculo) {
+            continue;
+        }
+
         // Obtiene el vehículo asociado a la pregunta
         const vehiculo = item.pregunta.vehiculo;
         const vehiculoId = vehiculo._id;
+        const interesadoId = item.pregunta.usuario._id;
+
+        const conversacionId = `${vehiculoId} - ${interesadoId}`;
 
         // Si aún no existe una conversación para ese vehículo, la crea
-        if (!conversacionesAgrupadas[vehiculoId]) {
-            conversacionesAgrupadas[vehiculoId] = {
-                vehiculoId: vehiculo._id,           
-                propietario: vehiculo.usuario.nombre, 
-                marca: vehiculo.marca,                
-                modelo: vehiculo.modelo,              
+        if (!conversacionesAgrupadas[conversacionId]) {
+            conversacionesAgrupadas[conversacionId] = {
+                vehiculoId: vehiculo._id,
+                propietarioId: vehiculo.usuario._id,
+                propietario: vehiculo.usuario.nombre,
+                interesadoId: interesadoId,
+                marca: vehiculo.marca,
+                modelo: vehiculo.modelo,
                 mensajes: [] // Lista de mensajes del chat
             };
         }
 
-        // Agrega la pregunta y respuesta
-        conversacionesAgrupadas[vehiculoId].mensajes.push({
-            pregunta: item.pregunta,
-            respuesta: item.respuesta
-        });
+        // Verifica si esa pregunta ya existe dentro de la conversación
+        const yaExiste = conversacionesAgrupadas[conversacionId].mensajes.find(
+            mensaje => mensaje.pregunta._id === item.pregunta._id
+        );
+
+        // Agrega la pregunta y respuesta solo si no existe
+        if (!yaExiste) {
+            conversacionesAgrupadas[conversacionId].mensajes.push({
+                pregunta: item.pregunta,
+                respuesta: item.respuesta
+            });
+        }
     }
 }
- //Crea la lista lateral de los chats
+
+//Crea la lista lateral de los chats
 async function mostrarListaConversaciones() {
     const lista = document.getElementById("listaConversaciones");
     lista.innerHTML = ""; //Limpia (Evita duplicaciones)
@@ -59,7 +100,6 @@ async function mostrarListaConversaciones() {
     //Convierte el objeto a lista
     const conversaciones = Object.values(conversacionesAgrupadas);
 
-    
     for (let i = 0; i < conversaciones.length; i++) {
         const c = conversaciones[i];
 
@@ -67,17 +107,18 @@ async function mostrarListaConversaciones() {
         item.className = "chat-item";
         item.innerHTML = `
             ${c.propietario}
-            ${c.marca} ${c.modelo}
+            ${c.marca} ${c.modelo} 
         `;
-        
+
         //Selecciona la conversacion del vehiculo
         item.onclick = function () {
             seleccionarConversacion(c.vehiculoId);
         };
-       
+
         lista.appendChild(item);
     }
-    //Muestra la conversacion del vehiculo 
+
+    //Muestra la conversacion del vehiculo
     await abrirConversacionInicial(conversaciones);
 }
 
@@ -85,22 +126,20 @@ async function mostrarListaConversaciones() {
 async function abrirConversacionInicial(conversaciones) {
     //Determina que conversacion va abrir
     const vehiculoASeleccionar = vehiculoSeleccionado || vehiculoIdUrl;
+
     // Abre la conversacion (vehiculo)
     if (vehiculoASeleccionar) {
         await seleccionarConversacion(vehiculoASeleccionar);
-    } 
+    }
     //Cuando no hay conversaciones, muestra la primera posicion
     else if (conversaciones.length > 0) {
         await seleccionarConversacion(conversaciones[0].vehiculoId);
-    } 
-
+    }
     else {
         document.getElementById("mensajesChat").innerHTML = "";
         document.getElementById("textoPregunta").value = "";
     }
-
 }
-
 
 async function seleccionarConversacion(vehiculoId) {
 
@@ -114,6 +153,29 @@ async function seleccionarConversacion(vehiculoId) {
             `${conversacion.propietario} - ${conversacion.marca} ${conversacion.modelo}`;
 
         mostrarMensajes(conversacion.mensajes);
+
+        // Determina si el usuario logueado es el propietario del vehículo
+        const esPropietario = usuarioLogueadoId === conversacion.propietarioId;
+
+        if (esPropietario) {
+            // Busca una pregunta sin respuesta para que el propietario la responda
+            const preguntaSinRespuesta = conversacion.mensajes.find(
+                mensaje => !mensaje.respuesta
+            );
+
+            if (preguntaSinRespuesta) {
+                modoEnvio = "respuesta";
+                preguntaPendienteId = preguntaSinRespuesta.pregunta._id;
+            } else {
+                modoEnvio = "sinAccion";
+                preguntaPendienteId = null;
+            }
+        } else {
+            // Si no es el propietario, entonces es el interesado y puede preguntar
+            modoEnvio = "pregunta";
+            preguntaPendienteId = null;
+        }
+
         return;
     }
 
@@ -134,10 +196,15 @@ async function seleccionarConversacion(vehiculoId) {
     document.getElementById("mensajesChat").innerHTML = "";
 }
 
-
 function mostrarMensajes(mensajes) {
     const contenedor = document.getElementById("mensajesChat"); //Mensajes del chat
     contenedor.innerHTML = "";
+
+    // Ordena los mensajes por la fecha de la pregunta (de más vieja a más nueva)
+    mensajes.sort((a, b) => {
+        return new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta);
+    });
+
     // Recorre todos los mensajes de la conversación
     for (let i = 0; i < mensajes.length; i++) {
         const item = mensajes[i];
@@ -182,4 +249,3 @@ async function obtenerVehiculo(vehiculoId) {
         return null;
     }
 }
-
