@@ -30,10 +30,6 @@ async function enviarMensaje() {
     }
 }
 
-function volverPagina() {
-    window.history.back();
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
     await cargarConversaciones();
     mostrarUsuarioConectado()
