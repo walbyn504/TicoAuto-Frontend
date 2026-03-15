@@ -93,7 +93,7 @@ function verificarUsuario() {
                     </li>
                     <li>
                         <a class="dropdown-item" href="html/conversacion/conversacion.html">
-                            Imbox
+                            Chat
                         </a>
                     </li>
                 </ul>

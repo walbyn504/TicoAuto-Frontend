@@ -121,3 +121,12 @@ h1 {
 .card-text {
     font-size: 0.9rem;
 }
+
+.titulo-centro{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: white;
+    font-size: 1.5rem;
+}
