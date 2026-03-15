@@ -9,6 +9,7 @@ let conversacionesAgrupadas = {};
 let conversacionSeleccionada = null;
 let modoEnvio = "pregunta";
 let preguntaPendienteId = null;
+let preguntaSinRespuesta = null;
 const usuarioLogueadoId = sessionStorage.getItem("usuarioId");
 
 async function enviarMensaje() {
