@@ -174,7 +174,6 @@ async function seleccionarConversacion(conversacionId) {
 }
 
 function mostrarConversacionExistente(conversacion) {
-
     document.getElementById("encabezadoChat").textContent =
         conversacion.propietario + " - " + conversacion.marca + " " + conversacion.modelo;
 
@@ -183,6 +182,7 @@ function mostrarConversacionExistente(conversacion) {
     const esPropietario = usuarioLogueadoId === conversacion.propietarioId;
 
     if (esPropietario) {
+        let preguntaSinRespuesta = null;
 
         for (let i = 0; i < conversacion.mensajes.length; i++) {
             if (!conversacion.mensajes[i].respuesta) {
@@ -195,8 +195,9 @@ function mostrarConversacionExistente(conversacion) {
             modoEnvio = "respuesta";
             preguntaPendienteId = preguntaSinRespuesta.pregunta._id;
         } else {
-            modoEnvio = "sinAccion";
-            preguntaPendienteId = null;
+            // Ya no hay pendiente, pero guardo la última pregunta
+            modoEnvio = "respuesta";
+            preguntaPendienteId = conversacion.mensajes[conversacion.mensajes.length - 1].pregunta._id;
         }
 
     } else {
