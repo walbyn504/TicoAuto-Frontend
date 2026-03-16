@@ -125,32 +125,38 @@ function confirmarVendido() {
 }
 
 async function marcarVendido(id) {
-
-
     if (!confirmarVendido()) return;
 
     const token = verificarSesion();
-    if (!token) return; 
+    if (!token) return;
 
     try {
         const res = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
             method: "PATCH",
-            headers: { "Authorization": `Bearer ${token}` }
-        }); 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        
+        let data = {};
+        
+        data = await res.json();
 
-        if (res.status === 200) {
-            alert("Vehículo marcado como vendido ✅");
-            obtenerVehiculos();
-        } else if (res.status === 404) {
-            alert("El vehículo no existe ❌");
-        } else if (res.status === 401) {
-            alert("Sesión expirada ❌");
-            sessionStorage.removeItem("token");
-            location.href = "/html/usuario/inicioSesion.html";
-        } else {
-            const data = await res.json().catch(() => null);
-            alert(data?.message || "Error al marcar el vehículo como vendido ❌");
+        if (!res.ok) {
+            if (res.status === 401) {
+                alert(data.message || "Sesión expirada ❌");
+                sessionStorage.removeItem("token");
+                location.href = "/html/usuario/inicioSesion.html";
+                return;
+            }
+
+            alert(data.message || "Error al marcar el vehículo como vendido ❌");
+            return;
         }
+
+        alert(data.message || "Vehículo marcado como vendido ✅");
+        obtenerVehiculos();
+
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
@@ -159,4 +165,3 @@ async function marcarVendido(id) {
 function cerrar() {
     location.href = "/index.html";
 }
-
