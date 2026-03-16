@@ -93,16 +93,16 @@ async function eliminarVehiculo(id) {
     if (!token) return;
 
     try {
-        const responce = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (!responce.ok) {
+        if (!response.ok) {
             alert(data.message || "Error al eliminar el vehículo ❌");
             return;
         }
