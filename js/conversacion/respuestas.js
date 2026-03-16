@@ -23,12 +23,9 @@ async function enviarRespuesta(preguntaId) {
 
         const data = await response.json();
 
-        // Mostrar siempre el mensaje que venga del backend si hubo error
-        if (!response.ok) {
-            alert(data.message || data.mensaje);
+         if (!response.ok) {
+            alert(data.mensaje);
             return;
-        }else if (response.ok){
-            alert (data.message);
         }
 
         textarea.value = "";
