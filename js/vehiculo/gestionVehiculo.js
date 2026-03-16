@@ -86,39 +86,37 @@ function editarVehiculo(id) {
     
 }
 
-function confirmarEliminacion() {
-    return confirm("¿Seguro que desea eliminar este vehículo?");
-}
-
 async function eliminarVehiculo(id) {
-
     if (!confirmarEliminacion()) return;
 
     const token = verificarSesion();
     if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+        const responce = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
 
-        if (res.status === 200) {
-            alert("Vehículo eliminado correctamente ✅");
-            obtenerVehiculos();
+        const data = await res.json();
+
+        if (!responce.ok) {
+            alert(data.message || "Error al eliminar el vehículo ❌");
+            return;
         }
-        else if (res.status === 404) {
-            alert("El vehículo no existe ❌");
-        }
-        else {
-            alert("Error al eliminar el vehículo ❌");
-        }
+
+        alert(data.message || "Vehículo eliminado correctamente ✅");
+        obtenerVehiculos();
 
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
+}
+
+function confirmarEliminacion() {
+    return confirm("¿Seguro que desea eliminar este vehículo?");
 }
 
 
