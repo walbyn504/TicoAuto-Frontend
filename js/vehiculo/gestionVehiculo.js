@@ -2,34 +2,35 @@ const apiBaseUrl = 'http://localhost:3001';
 
 window.onload = obtenerVehiculos;
 
-function verificarSesion() {
-    const token = sessionStorage.getItem('token');
-
-    if (!token) {
-        alert("Debe iniciar sesión");
-        location.href = "/html/usuario/inicioSesion.html";
-        return null;
-    }
-
-    return token;
-}
-
 async function obtenerVehiculos() {
-
-    const token = verificarSesion();
+    const token = sessionStorage.getItem('token');
     if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const response = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        if (res.status === 200) {
-            const vehiculos = await res.json();
-            mostrarVehiculos(vehiculos);
-        } else {
-            alert("Error al cargar vehículos ❌");
+        let data = [];
+
+        data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert(data.message || "Sesión expirada ❌");
+                sessionStorage.removeItem("token");
+                location.href = "/html/usuario/inicioSesion.html";
+                return;
+            }
+
+            alert(data.message || "Error al cargar vehículos ❌");
+            return;
         }
+
+        mostrarVehiculos(data);
+
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
@@ -131,7 +132,7 @@ async function marcarVendido(id) {
     if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
             method: "PATCH",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -140,10 +141,10 @@ async function marcarVendido(id) {
         
         let data = {};
         
-        data = await res.json();
+        data = await response.json();
 
-        if (!res.ok) {
-            if (res.status === 401) {
+        if (!response.ok) {
+            if (response.status === 401) {
                 alert(data.message || "Sesión expirada ❌");
                 sessionStorage.removeItem("token");
                 location.href = "/html/usuario/inicioSesion.html";
