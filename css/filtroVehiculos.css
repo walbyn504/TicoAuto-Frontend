@@ -66,6 +66,10 @@ h1 {
     color: white !important;
 }
 
+.form-select option {
+    background: #1f2937;
+}
+
 .form-control::placeholder {
     color: rgba(255,255,255,0.75);
     font-weight: 500;
