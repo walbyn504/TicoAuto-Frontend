@@ -170,3 +170,21 @@ h1 {
     font-size: 1.5rem;
 }
 
+.mensaje-vacio {
+    padding: 30px;
+    color: white;
+    max-width: 500px;
+    margin: auto;
+}
+
+.mensaje-vacio h4 {
+    color: #ffffff;
+    font-weight: 700; /* más negrita */
+    text-shadow: 0 12px 10px rgba(0, 0, 0, 0.8);
+}
+
+.mensaje-vacio p {
+    opacity: 0.95;
+    font-weight: 500;
+    text-shadow: 0 2px 6px rgba(0,0,0,4); /* sombra al texto */
+}

@@ -93,7 +93,7 @@ async function ejecutarBusqueda(page = paginaActual) {
             contenedor.innerHTML = "";
 
             contenedor.innerHTML = `
-                <div class="col-12 text-center text-white mt-5">
+                <div class="col-12 text-center mt-5 mensaje-vacio">
                     <h4> No se encontraron vehículos</h4>
                     <p>Intenta cambiar los filtros de búsqueda.</p>
                 </div>
