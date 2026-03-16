@@ -8,8 +8,31 @@ async function registrarUsuario() {
     const correo = document.getElementById('correo').value.trim();
     const contrasenna = document.getElementById('contrasenna').value.trim();
 
-    if (!nombre || !primerApellido || !segundoApellido || !telefono || !correo || !contrasenna) { 
-        alert('Complete todos los campos correctamente');
+     if (!nombre || !primerApellido || !segundoApellido || !telefono || !correo || !contrasenna) {
+        alert('Todos los campos son obligatorios');
+        return;
+    }
+
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regexCorreo.test(correo)) {
+        alert("El formato del correo no es válido");
+        return;
+    }
+
+    const regexTelefono = /^[0-9]{8,}$/;
+    if (!regexTelefono.test(telefono)) {
+        alert("El teléfono debe tener al menos 8 dígitos");
+        return;
+    }
+
+    const tieneMin = /[a-z]/.test(contrasenna);
+    const tieneMay = /[A-Z]/.test(contrasenna);
+    const tieneNumero = /\d/.test(contrasenna);
+    const tieneEspecial = /[@$!%*?&.#_-]/.test(contrasenna);
+    const largoMinimo = contrasenna.length >= 8;
+
+    if (!(tieneMin && tieneMay && tieneNumero && tieneEspecial && largoMinimo)) {
+        alert("La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y carácter especial.");
         return;
     }
 
