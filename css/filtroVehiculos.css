@@ -9,14 +9,6 @@ body {
     min-height: 100%;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: -1;
-}
-
 /* ============================= */
 /* Contenedor */
 /* ============================= */
@@ -61,15 +53,58 @@ h1 {
 
 /* Inputs */
 
+.form-label {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
 .form-control,
 .form-select {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(0,180,255,0.6);
-    color: rgb(0, 0, 0);
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(0,180,255,0.6) !important;
+    color: white !important;
+}
+
+.form-select option {
+    background: #1f2937;
 }
 
 .form-control::placeholder {
-    color: black;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(0,150,255,0.8) !important;
+    box-shadow: 0 0 0 0.15rem rgba(0,180,255,0.15) !important;
+    color: white !important;
+}
+
+.form-control:disabled,
+.form-select:disabled {
+    background: rgba(255,255,255,0.05) !important;
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* Para que el navegador no los pinte blancos o amarillos */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-select:-webkit-autofill,
+.form-select:-webkit-autofill:hover,
+.form-select:-webkit-autofill:focus {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(20,20,20,0.95) inset !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Opcional: cursor blanco */
+.form-control,
+.form-select {
+    caret-color: white;
 }
 
 /* ============================= */
@@ -112,6 +147,7 @@ h1 {
     background: rgba(0,180,255,0.2);
 }
 
+
 .numero-pagina {
     color: #ffffff;
 }
@@ -134,3 +170,21 @@ h1 {
     font-size: 1.5rem;
 }
 
+.mensaje-vacio {
+    padding: 30px;
+    color: white;
+    max-width: 500px;
+    margin: auto;
+}
+
+.mensaje-vacio h4 {
+    color: #ffffff;
+    font-weight: 700; /* más negrita */
+    text-shadow: 0 12px 10px rgba(0, 0, 0, 0.8);
+}
+
+.mensaje-vacio p {
+    opacity: 0.95;
+    font-weight: 500;
+    text-shadow: 0 2px 6px rgba(0,0,0,4); /* sombra al texto */
+}

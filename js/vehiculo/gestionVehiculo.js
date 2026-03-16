@@ -2,34 +2,35 @@ const apiBaseUrl = 'http://localhost:3001';
 
 window.onload = obtenerVehiculos;
 
-function verificarSesion() {
-    const token = sessionStorage.getItem('token');
-
-    if (!token) {
-        alert("Debe iniciar sesión");
-        location.href = "/html/usuario/inicioSesion.html";
-        return null;
-    }
-
-    return token;
-}
-
 async function obtenerVehiculos() {
-
-    const token = verificarSesion();
+    const token = sessionStorage.getItem('token');
     if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const response = await fetch(`${apiBaseUrl}/api/mis-vehiculos`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        if (res.status === 200) {
-            const vehiculos = await res.json();
-            mostrarVehiculos(vehiculos);
-        } else {
-            alert("Error al cargar vehículos ❌");
+        let data = [];
+
+        data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert(data.message || "Sesión expirada ❌");
+                sessionStorage.removeItem("token");
+                location.href = "/html/usuario/inicioSesion.html";
+                return;
+            }
+
+            alert(data.message || "Error al cargar vehículos ❌");
+            return;
         }
+
+        mostrarVehiculos(data);
+
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
@@ -86,39 +87,37 @@ function editarVehiculo(id) {
     
 }
 
-function confirmarEliminacion() {
-    return confirm("¿Seguro que desea eliminar este vehículo?");
-}
-
 async function eliminarVehiculo(id) {
-
     if (!confirmarEliminacion()) return;
 
     const token = verificarSesion();
     if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         });
 
-        if (res.status === 200) {
-            alert("Vehículo eliminado correctamente ✅");
-            obtenerVehiculos();
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Error al eliminar el vehículo ❌");
+            return;
         }
-        else if (res.status === 404) {
-            alert("El vehículo no existe ❌");
-        }
-        else {
-            alert("Error al eliminar el vehículo ❌");
-        }
+
+        alert(data.message || "Vehículo eliminado correctamente ✅");
+        obtenerVehiculos();
 
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
+}
+
+function confirmarEliminacion() {
+    return confirm("¿Seguro que desea eliminar este vehículo?");
 }
 
 
@@ -127,32 +126,38 @@ function confirmarVendido() {
 }
 
 async function marcarVendido(id) {
-
-
     if (!confirmarVendido()) return;
 
     const token = verificarSesion();
-    if (!token) return; 
+    if (!token) return;
 
     try {
-        const res = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
+        const response = await fetch(`${apiBaseUrl}/api/vehiculo/vendido/${id}`, {
             method: "PATCH",
-            headers: { "Authorization": `Bearer ${token}` }
-        }); 
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        
+        let data = {};
+        
+        data = await response.json();
 
-        if (res.status === 200) {
-            alert("Vehículo marcado como vendido ✅");
-            obtenerVehiculos();
-        } else if (res.status === 404) {
-            alert("El vehículo no existe ❌");
-        } else if (res.status === 401) {
-            alert("Sesión expirada ❌");
-            sessionStorage.removeItem("token");
-            location.href = "/html/usuario/inicioSesion.html";
-        } else {
-            const data = await res.json().catch(() => null);
-            alert(data?.message || "Error al marcar el vehículo como vendido ❌");
+        if (!response.ok) {
+            if (response.status === 401) {
+                alert(data.message || "Sesión expirada ❌");
+                sessionStorage.removeItem("token");
+                location.href = "/html/usuario/inicioSesion.html";
+                return;
+            }
+
+            alert(data.message || "Error al marcar el vehículo como vendido ❌");
+            return;
         }
+
+        alert(data.message || "Vehículo marcado como vendido ✅");
+        obtenerVehiculos();
+
     } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
@@ -161,4 +166,3 @@ async function marcarVendido(id) {
 function cerrar() {
     location.href = "/index.html";
 }
-

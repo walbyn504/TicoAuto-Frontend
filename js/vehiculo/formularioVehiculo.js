@@ -53,7 +53,6 @@ function llenarFormulario(vehiculo) {
     }
 }
 
-// --- Guardar o actualizar vehículo ---
 async function guardarVehiculo() {
     const form = document.getElementById('formVehiculo');
     const id = form.vehiculoId.value;
@@ -67,12 +66,24 @@ async function guardarVehiculo() {
     const condicion = form.condicion.value;
     const imagen = document.getElementById("imagen").files[0];
 
-    if (!marca || !modelo || isNaN(anno) || isNaN(precio)) {
-        return alert("Complete todos los campos ❌");
+    if (!marca || !modelo || !color || isNaN(anno) || isNaN(precio) || !combustible || !transmision || !condicion) {
+        alert("Complete todos los campos correctamente ❌");
+        return;
     }
-    
+
+    if (anno < 0) {
+        alert("El año no puede ser negativo ❌");
+        return;
+    }
+
+    if (precio < 0) {
+        alert("El precio no puede ser negativo ❌");
+        return;
+    }
+
     if (!id && !imagen) {
-        return alert("Seleccione una imagen para el vehículo ❌");
+        alert("Seleccione una imagen para el vehículo ❌");
+        return;
     }
 
     const formData = new FormData();
@@ -84,6 +95,7 @@ async function guardarVehiculo() {
     formData.append('color', color);
     formData.append('transmision', transmision);
     formData.append('condicion', condicion);
+
     if (imagen) {
         formData.append('imagen', imagen);
     }
@@ -99,18 +111,18 @@ async function guardarVehiculo() {
         );
 
         const data = await response.json();
-        if (!response.ok){
+
+        if (!response.ok) {
             alert(data.message);
             return;
         }
 
         alert(id ? "Vehículo actualizado ✅" : "Vehículo creado ✅");
         location.href = '/html/vehiculo/gestionVehiculo.html';
-    } catch {
+    } catch (error) {
         alert("No se pudo conectar al servidor ❌");
     }
 }
-
 // --- Regresar al índice ---
 function regresar() {
     location.href = '/html/vehiculo/gestionVehiculo.html';
