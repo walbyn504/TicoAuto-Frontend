@@ -326,3 +326,25 @@ body.pagina-mensajes {
         width: 100%;
     }
 }
+
+.chat-pendiente {
+    font-weight: bold;
+    background-color: #fff8e1;
+    border-left: 4px solid #22c55e;
+}
+
+.chat-item {
+    position: relative;
+    padding: 10px;
+}
+
+.chat-punto {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #22c55e;
+    border-radius: 50%;
+}

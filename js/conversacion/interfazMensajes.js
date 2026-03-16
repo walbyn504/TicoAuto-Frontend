@@ -1,22 +1,46 @@
 //Crea la lista lateral de los chats
+
 async function mostrarListaConversaciones() {
     const lista = document.getElementById("listaConversaciones");
-    lista.innerHTML = ""; //Limpia (Evita duplicaciones)
+    lista.innerHTML = "";
 
-    //Convierte el objeto a lista
     const conversaciones = Object.values(conversacionesAgrupadas);
 
     for (let i = 0; i < conversaciones.length; i++) {
         const c = conversaciones[i];
 
+        const esPropietario = String(usuarioLogueadoId) === String(c.propietarioId);
+
+        const nombreMostrar = esPropietario
+            ? c.mensajes[0].pregunta.usuario.nombre
+            : c.propietario;
+
+        let tienePendiente = false;
+
+        if (esPropietario && c.mensajes && c.mensajes.length > 0) {
+            for (let j = 0; j < c.mensajes.length; j++) {
+                if (!c.mensajes[j].respuesta) {
+                    tienePendiente = true;
+                    break;
+                }
+            }
+        }
+
         const item = document.createElement("div");
         item.className = "chat-item";
+
+        if (tienePendiente) {
+            item.classList.add("chat-pendiente");
+        }
+
         item.innerHTML = `
-            <strong>${c.propietario}</strong>
-            <small>${c.marca} ${c.modelo}</small>
+            <strong>${nombreMostrar}</strong>
+            <small>
+                ${c.marca} ${c.modelo}
+                ${tienePendiente ? '<span class="chat-punto"></span>' : ''}
+            </small>
         `;
 
-        //Selecciona la conversacion del vehiculo
         item.onclick = function () {
             seleccionarConversacion(c.conversacionId);
         };
@@ -24,7 +48,6 @@ async function mostrarListaConversaciones() {
         lista.appendChild(item);
     }
 
-    //Muestra la conversacion del vehiculo
     await abrirConversacionInicial(conversaciones);
 }
 
