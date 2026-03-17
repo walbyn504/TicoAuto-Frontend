@@ -1,15 +1,43 @@
-//Crea la lista lateral de los chats
+function agregarTituloSiCorresponde(lista, texto, yaAgregado) {
+    if (!yaAgregado) {
+        const titulo = document.createElement("div");
+        titulo.className = "chat-seccion-titulo";
+        titulo.innerText = texto;
+        lista.appendChild(titulo);
+        return true;
+    }
+    return yaAgregado;
+}
 
+//Crea la lista lateral de los chats
 async function mostrarListaConversaciones() {
     const lista = document.getElementById("listaConversaciones");
     lista.innerHTML = "";
-
+ 
+    //Convierte el objeto a lista
     const conversaciones = Object.values(conversacionesAgrupadas);
+
+    let tituloRecibidasAgregado = false;
+    let tituloRealizadasAgregado = false;
 
     for (let i = 0; i < conversaciones.length; i++) {
         const c = conversaciones[i];
 
         const esPropietario = String(usuarioLogueadoId) === String(c.propietarioId);
+
+        if (esPropietario) {
+            tituloRecibidasAgregado = agregarTituloSiCorresponde(
+                lista,
+                "Consultas recibidas",
+                tituloRecibidasAgregado
+            );
+        } else {
+            tituloRealizadasAgregado = agregarTituloSiCorresponde(
+                lista,
+                "Consultas realizadas",
+                tituloRealizadasAgregado
+            );
+        }
 
         const nombreMostrar = esPropietario
             ? c.mensajes[0].pregunta.usuario.nombre
@@ -42,6 +70,11 @@ async function mostrarListaConversaciones() {
         `;
 
         item.onclick = function () {
+            document.querySelectorAll(".chat-item").forEach(chat => {
+                chat.classList.remove("activo");
+            });
+
+            item.classList.add("activo");
             seleccionarConversacion(c.conversacionId);
         };
 
