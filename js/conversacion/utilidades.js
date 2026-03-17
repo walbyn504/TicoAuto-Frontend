@@ -42,5 +42,5 @@ async function obtenerVehiculo(vehiculoId) {
 }
 
 function volverPagina() {
-    window.history.back();
+    window.location.href = "../../index.html";
 }
