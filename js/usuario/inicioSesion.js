@@ -21,7 +21,6 @@ async function iniciarSesion() {
             headers: {
                 'Content-Type': 'application/json'
             },
-
             // Enviar solo correo y contraseña para autenticación
             body: JSON.stringify({ correo: correo, contrasenna: contrasenna })
         });
