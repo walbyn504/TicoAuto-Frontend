@@ -152,8 +152,9 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
     }
 
     document.getElementById("encabezadoChat").textContent =
-        vehiculo.usuario.nombre + " - " + vehiculo.marca + " " + vehiculo.modelo;
+    `Propietario: ${vehiculo.usuario.nombre} | Datos vehículo: ${vehiculo.marca} ${vehiculo.modelo}`;
 
+        
     document.getElementById("mensajesChat").innerHTML = `
     <div class="chat-vacio">
         <div>
