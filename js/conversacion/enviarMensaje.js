@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!token || !usuarioLogueadoId) {
     window.location.href = "../../html/usuario/inicioSesion.html";
     window
-
     return;
 }
 
