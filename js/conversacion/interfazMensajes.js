@@ -182,10 +182,8 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
     </div>
     `;
 
-    // Si el usuario es el propietario, no puede enviarse mensajes a sí mismo
-    if (usuarioLogueadoId === vehiculo.usuario._id) {
-        modoEnvio = "sinAccion";
-    } else {
+    // Si el usuario logueado no es el propietario del vehículo, entonces puede hacer una pregunta
+    if (usuarioLogueadoId !== vehiculo.usuario._id) {
         modoEnvio = "pregunta";
     }
 
