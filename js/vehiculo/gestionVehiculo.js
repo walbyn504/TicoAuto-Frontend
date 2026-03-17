@@ -68,7 +68,7 @@ function mostrarVehiculos(vehiculos) {
                             Eliminar
                         </button>
 
-                            ${v.estado !== 'vendido' ? `
+                            ${v.estado !== 'Vendido' ? `
                             <button class="btn btn-success btn-sm flex-fill" onclick="marcarVendido('${v._id}')">
                                 Vendido
                             </button>
@@ -89,8 +89,8 @@ function editarVehiculo(id) {
 
 async function eliminarVehiculo(id) {
     if (!confirmarEliminacion()) return;
+    const token = sessionStorage.getItem('token');
 
-    const token = verificarSesion();
     if (!token) return;
 
     try {
@@ -128,7 +128,7 @@ function confirmarVendido() {
 async function marcarVendido(id) {
     if (!confirmarVendido()) return;
 
-    const token = verificarSesion();
+    const token = sessionStorage.getItem('token');
     if (!token) return;
 
     try {
