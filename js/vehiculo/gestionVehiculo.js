@@ -68,12 +68,9 @@ function mostrarVehiculos(vehiculos) {
                             Eliminar
                         </button>
 
-                            ${v.estado !== 'Vendido' ? `
-                            <button class="btn btn-success btn-sm flex-fill" onclick="marcarVendido('${v._id}')">
-                                Vendido
-                            </button>
-                        ` : `
-                        `}
+                        <button class="btn btn-success btn-sm flex-fill" onclick="marcarVendido('${v._id}')">
+                            Vendido
+                        </button>
                     </div>
                 </div>
             </div>
