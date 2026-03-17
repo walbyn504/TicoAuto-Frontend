@@ -1,5 +1,3 @@
-
-
 function verDetalles(id) {
     location.href = `html/vehiculo/verInfoVehiculo.html?id=${id}`;
 }
