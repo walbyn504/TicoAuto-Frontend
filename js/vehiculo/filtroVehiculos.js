@@ -7,72 +7,37 @@ async function initFiltroVehiculos() {
     await ejecutarBusqueda(1);
 }
 
-// --- Filtrar vehículos ---
+// Ejecuta la búsqueda de vehículos con filtros y paginación
 async function ejecutarBusqueda(page = paginaActual) {
     try {
         paginaActual = page;
 
-        const marca = document.getElementById('marca').value.trim();
-        const modelo = document.getElementById('modelo').value.trim();
-        const anno_min = document.getElementById('minAnno').value;
-        const anno_max = document.getElementById('maxAnno').value;
-        const precio_min = document.getElementById('minPrecio').value;
-        const precio_max = document.getElementById('maxPrecio').value;
-        const estado = document.getElementById('estado').value;
+        // Obtiene los filtros ingresados
+        const filtros = obtenerFiltrosBusqueda();
 
-        // --- Validaciones frontend ---
-        if (anno_min && Number(anno_min) < 0) {
-            alert("El año mínimo no puede ser negativo ❌");
-            refrescar();
-            return;
-        }
-
-        if (anno_max && Number(anno_max) < 0) {
-            alert("El año máximo no puede ser negativo ❌");
-            refrescar();
-            return;
-        }
-
-        if (precio_min && Number(precio_min) < 0) {
-            alert("El precio mínimo no puede ser negativo ❌");
-            refrescar();
-            return;
-        }
-
-        if (precio_max && Number(precio_max) < 0) {
-            alert("El precio máximo no puede ser negativo ❌");
-            refrescar();
-            return;
-        }
-
-        if (anno_min && anno_max && Number(anno_min) > Number(anno_max)) {
-            alert("El año mínimo no puede ser mayor al año máximo ❌");
-            refrescar();
-            return;
-        }
-
-        if (precio_min && precio_max && Number(precio_min) > Number(precio_max)) {
-            alert("El precio mínimo no puede ser mayor al precio máximo ❌");
-            refrescar();
+        // Valida los filtros antes de buscar
+        if (!validarFiltros(filtros)) {
             return;
         }
 
         const limit = 3;
         const params = new URLSearchParams();
+        
+        if (filtros.marca) params.append('marca', filtros.marca);
+        if (filtros.modelo) params.append('modelo', filtros.modelo);
+        if (filtros.anno_min) params.append('anno_min', filtros.anno_min);
+        if (filtros.anno_max) params.append('anno_max', filtros.anno_max);
+        if (filtros.precio_min) params.append('precio_min', filtros.precio_min);
+        if (filtros.precio_max) params.append('precio_max', filtros.precio_max);
+        if (filtros.estado) params.append('estado', filtros.estado);
 
-        if (marca) params.append('marca', marca);
-        if (modelo) params.append('modelo', modelo);
-        if (anno_min) params.append('anno_min', anno_min);
-        if (anno_max) params.append('anno_max', anno_max);
-        if (precio_min) params.append('precio_min', precio_min);
-        if (precio_max) params.append('precio_max', precio_max);
-        if (estado) params.append('estado', estado);
-
+        // Agrega datos de paginación
         params.append('page', paginaActual);
         params.append('limit', limit);
 
         history.replaceState(null, "", "?" + params.toString());
 
+        // Hace la consulta al backend
         const response = await fetch(`${apiBaseUrl}/api/vehiculos/filtro?${params.toString()}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -84,43 +49,16 @@ async function ejecutarBusqueda(page = paginaActual) {
             document.getElementById('vehiculosContainer').innerHTML = '';
             return;
         }
-        
-        // Si no hay vehículos, muestra un mensaje
+
         if (!data.vehiculos || data.vehiculos.length === 0) {
-
-            // Primero limpia los vehículos que estaban en pantalla
-            const contenedor = document.getElementById('vehiculosContainer');
-            contenedor.innerHTML = "";
-
-            contenedor.innerHTML = `
-                <div class="col-12 text-center mt-5 mensaje-vacio">
-                    <h4> No se encontraron vehículos</h4>
-                    <p>Intenta cambiar los filtros de búsqueda.</p>
-                </div>
-            `;
-
+            mostrarMensajeSinResultados();
             return;
         }
 
-        // Si no hay vehículos, muestra un mensaje
-        if (!data.vehiculos || data.vehiculos.length === 0) {
-
-            // Primero limpia los vehículos que estaban en pantalla
-            const contenedor = document.getElementById('vehiculosContainer');
-            contenedor.innerHTML = "";
-
-            contenedor.innerHTML = `
-                <div class="col-12 text-center text-white mt-5">
-                    <h4> No se encontraron vehículos</h4>
-                    <p>Intenta cambiar los filtros de búsqueda.</p>
-                </div>
-            `;
-
-            return;
-        }
-
+        // Muestra los vehículos encontrados
         mostrarVehiculos(data.vehiculos);
 
+        // Actualiza la paginación actual
         paginaActual = data.paginaActual;
         totalPaginas = data.totalPaginas;
 
@@ -130,6 +68,78 @@ async function ejecutarBusqueda(page = paginaActual) {
         alert("No se pudo conectar al servidor ❌");
     }
 }
+
+// Obtiene los valores de los filtros del formulario
+function obtenerFiltrosBusqueda() {
+    return {
+        marca: document.getElementById('marca').value.trim(),
+        modelo: document.getElementById('modelo').value.trim(),
+        anno_min: document.getElementById('minAnno').value,
+        anno_max: document.getElementById('maxAnno').value,
+        precio_min: document.getElementById('minPrecio').value,
+        precio_max: document.getElementById('maxPrecio').value,
+        estado: document.getElementById('estado').value
+    };
+}
+
+
+// Valida los datos antes de enviar la búsqueda
+function validarFiltros(filtros) {
+    const { anno_min, anno_max, precio_min, precio_max } = filtros;
+
+    if (anno_min && Number(anno_min) < 0) {
+        alert("El año mínimo no puede ser negativo ❌");
+        refrescar();
+        return false;
+    }
+
+    if (anno_max && Number(anno_max) < 0) {
+        alert("El año máximo no puede ser negativo ❌");
+        refrescar();
+        return false;
+    }
+
+    if (precio_min && Number(precio_min) < 0) {
+        alert("El precio mínimo no puede ser negativo ❌");
+        refrescar();
+        return false;
+    }
+
+    if (precio_max && Number(precio_max) < 0) {
+        alert("El precio máximo no puede ser negativo ❌");
+        refrescar();
+        return false;
+    }
+
+    if (anno_min && anno_max && Number(anno_min) > Number(anno_max)) {
+        alert("El año mínimo no puede ser mayor al año máximo ❌");
+        refrescar();
+        return false;
+    }
+
+    if (precio_min && precio_max && Number(precio_min) > Number(precio_max)) {
+        alert("El precio mínimo no puede ser mayor al precio máximo ❌");
+        refrescar();
+        return false;
+    }
+
+    return true;
+}
+
+
+// Muestra mensaje cuando no hay resultados
+function mostrarMensajeSinResultados() {
+    const contenedor = document.getElementById('vehiculosContainer');
+    contenedor.innerHTML = "";
+
+    contenedor.innerHTML = `
+        <div class="col-12 text-center mt-5 mensaje-vacio">
+            <h4>No se encontraron vehículos</h4>
+            <p>Intenta cambiar los filtros de búsqueda.</p>
+        </div>
+    `;
+}
+
 
 function paginaSiguiente() {
     if (paginaActual < totalPaginas) {
