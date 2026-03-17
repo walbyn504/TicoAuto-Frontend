@@ -110,7 +110,7 @@ async function seleccionarConversacion(conversacionId) {
 
 function mostrarConversacionExistente(conversacion) {
     document.getElementById("encabezadoChat").textContent =
-        conversacion.propietario + " - " + conversacion.marca + " " + conversacion.modelo;
+    `Propietario: ${conversacion.propietario} | Datos vehículo: ${conversacion.marca} ${conversacion.modelo}`;
 
     mostrarMensajes(conversacion.mensajes);
 
