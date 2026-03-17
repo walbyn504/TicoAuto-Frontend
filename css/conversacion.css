@@ -329,7 +329,6 @@ body.pagina-mensajes {
 
 .chat-pendiente {
     font-weight: bold;
-    background-color: #fff8e1;
     border-left: 4px solid #22c55e;
 }
 
@@ -347,4 +346,14 @@ body.pagina-mensajes {
     height: 10px;
     background-color: #22c55e;
     border-radius: 50%;
+}
+
+
+.chat-seccion-titulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
 }
