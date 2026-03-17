@@ -33,10 +33,10 @@ async function enviarMensaje() {
 document.addEventListener("DOMContentLoaded", async () => {
 
     if (!token || !usuarioLogueadoId) {
-    window.location.href = "../../html/usuario/inicioSesion.html";
-    window
-    return;
-}
+        window.location.href = "../../html/usuario/inicioSesion.html";
+        window
+        return;
+    }
 
     await cargarConversaciones();
     mostrarUsuarioConectado()
