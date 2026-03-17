@@ -2,8 +2,6 @@ const apiBaseUrl = 'http://localhost:3001';
 const token = sessionStorage.getItem('token');
 
 // --- Función principal: inicializa la página ---
-
-
 async function initVerVehiculo() {
     const id = getVehiculoIdFromUrl();
     if (!id) {
