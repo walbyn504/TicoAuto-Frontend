@@ -1,8 +1,12 @@
+
+// Agrega un título a la lista solo si todavía no se ha agregado
 function agregarTituloSiCorresponde(lista, texto, yaAgregado) {
     if (!yaAgregado) {
         const titulo = document.createElement("div");
         titulo.className = "chat-seccion-titulo";
         titulo.innerText = texto;
+
+         // Lo agrega al contenedor de la lista de conversaciones
         lista.appendChild(titulo);
         return true;
     }
@@ -25,6 +29,7 @@ async function mostrarListaConversaciones() {
 
         const esPropietario = String(usuarioLogueadoId) === String(c.propietarioId);
 
+         // Si es propietario, agrega el título de consultas recibidas
         if (esPropietario) {
             tituloRecibidasAgregado = agregarTituloSiCorresponde(
                 lista,
@@ -39,6 +44,8 @@ async function mostrarListaConversaciones() {
             );
         }
 
+
+        // Si soy propietario, muestro el nombre de quien preguntó, caso contrario el propietario
         const nombreMostrar = esPropietario
             ? c.mensajes[0].pregunta.usuario.nombre
             : c.propietario;
@@ -47,6 +54,7 @@ async function mostrarListaConversaciones() {
 
         if (esPropietario && c.mensajes && c.mensajes.length > 0) {
             for (let j = 0; j < c.mensajes.length; j++) {
+                 // Si una pregunta no tiene respuesta, marcamos la conversación como pendiente
                 if (!c.mensajes[j].respuesta) {
                     tienePendiente = true;
                     break;
@@ -54,6 +62,7 @@ async function mostrarListaConversaciones() {
             }
         }
 
+         // Crea el elemento visual de la conversación
         const item = document.createElement("div");
         item.className = "chat-item";
 
@@ -69,15 +78,19 @@ async function mostrarListaConversaciones() {
             </small>
         `;
 
+        // Evento al hacer clic sobre una conversación
         item.onclick = function () {
+             // Quita la clase activo de todos los chats
             document.querySelectorAll(".chat-item").forEach(chat => {
                 chat.classList.remove("activo");
             });
 
+             // Marca el chat actual como activo
             item.classList.add("activo");
             seleccionarConversacion(c.conversacionId);
         };
 
+        // Agrega el chat a la lista lateral
         lista.appendChild(item);
     }
 
@@ -91,12 +104,15 @@ async function seleccionarConversacion(conversacionId) {
     const items = document.querySelectorAll(".chat-item");
     items.forEach(item => item.classList.remove("activo"));
 
+    // Busca la conversación dentro del objeto agrupado
     const conversacion = conversacionesAgrupadas[conversacionId];
 
     if (conversacion) {
+         // Convierte el objeto a arreglo para encontrar su posición
         const conversaciones = Object.values(conversacionesAgrupadas);
         const index = conversaciones.findIndex(c => c.conversacionId === conversacionId);
 
+        // Marca el elemento visual correspondiente como activo
         if (index !== -1 && items[index]) {
             items[index].classList.add("activo");
         }
@@ -119,6 +135,7 @@ function mostrarConversacionExistente(conversacion) {
     if (esPropietario) {
         let preguntaSinRespuesta = null;
 
+        // Busca si existe alguna pregunta sin responder
         for (let i = 0; i < conversacion.mensajes.length; i++) {
             if (!conversacion.mensajes[i].respuesta) {
                 preguntaSinRespuesta = conversacion.mensajes[i];
@@ -136,6 +153,7 @@ function mostrarConversacionExistente(conversacion) {
         }
 
     } else {
+         // Si no es propietario, entonces puede hacer una nueva pregunta
         modoEnvio = "pregunta";
         preguntaPendienteId = null;
     }
@@ -162,8 +180,9 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
             Aún no tienes conversaciones disponibles.
         </div>
     </div>
-`;
+    `;
 
+    // Si el usuario es el propietario, no puede enviarse mensajes a sí mismo
     if (usuarioLogueadoId === vehiculo.usuario._id) {
         modoEnvio = "sinAccion";
     } else {
@@ -174,11 +193,12 @@ async function mostrarVehiculoSinConversacion(vehiculoId) {
 }
 
 
+// Muestra en pantalla todos los mensajes de la conversación
 function mostrarMensajes(mensajes) {
     const contenedor = document.getElementById("mensajesChat");
     contenedor.innerHTML = "";
 
-    // Ordena por fecha de la pregunta
+    // Ordena por fecha de la pregunta, del más antiguo al más reciente
     mensajes.sort((a, b) => new Date(a.pregunta.fechaPregunta) - new Date(b.pregunta.fechaPregunta));
 
     let ultimoUsuario = null;
@@ -190,6 +210,7 @@ function mostrarMensajes(mensajes) {
         const usuarioPregunta = item.pregunta.usuario.nombre;
         const fechaPregunta = formatearFecha(item.pregunta.fechaPregunta);
 
+        // Solo muestra el nombre si es diferente al último mostrado
         let nombreHTML = "";
         if (ultimoUsuario !== usuarioPregunta) {
             nombreHTML = `<div class="nombre">${usuarioPregunta}</div>`;
