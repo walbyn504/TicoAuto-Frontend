@@ -1,8 +1,6 @@
-
-
 function verificarUsuario() {
+    
     const usuario = sessionStorage.getItem("usuario");
-
     const nombreCont = document.getElementById("nombreUsuario");
     const botonesCont = document.getElementById("botonesUsuario");
     const menuCont = document.getElementById("menuOpciones");
