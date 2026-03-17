@@ -1,3 +1,52 @@
+// Genera la lista lateral de conversaciones
+async function mostrarListaConversaciones() {
+
+    const lista = document.getElementById("listaConversaciones");
+    lista.innerHTML = ""; // Limpia la lista
+
+    // Convierte el objeto de conversaciones en un arreglo
+    const conversaciones = Object.values(conversacionesAgrupadas);
+
+    let tituloRecibidasAgregado = false;
+    let tituloRealizadasAgregado = false;
+
+    // Recorre todas las conversaciones
+    for (let i = 0; i < conversaciones.length; i++) {
+
+        const c = conversaciones[i];
+
+        // Verifica si el usuario es propietario del vehículo
+        const esPropietario = String(usuarioLogueadoId) === String(c.propietarioId);
+
+        // Agrega el título correspondiente
+        if (esPropietario) {
+            tituloRecibidasAgregado = agregarTituloSiCorresponde(
+                lista,
+                "Consultas recibidas",
+                tituloRecibidasAgregado
+            );
+        } else {
+            tituloRealizadasAgregado = agregarTituloSiCorresponde(
+                lista,
+                "Consultas realizadas",
+                tituloRealizadasAgregado
+            );
+        }
+
+        // Verifica si la conversación tiene preguntas pendientes
+        const pendiente = tienePendiente(c, esPropietario);
+
+        // Crea el elemento visual del chat
+        const item = crearItemConversacion(c, esPropietario, pendiente);
+
+        // Agrega el chat a la lista lateral
+        lista.appendChild(item);
+    }
+
+    // Abre automáticamente la primera conversación
+    await abrirConversacionInicial(conversaciones);
+}
+
 
 // Agrega un título a la lista solo si todavía no se ha agregado
 function agregarTituloSiCorresponde(lista, texto, yaAgregado) {
@@ -13,89 +62,69 @@ function agregarTituloSiCorresponde(lista, texto, yaAgregado) {
     return yaAgregado;
 }
 
-//Crea la lista lateral de los chats
-async function mostrarListaConversaciones() {
-    const lista = document.getElementById("listaConversaciones");
-    lista.innerHTML = "";
- 
-    //Convierte el objeto a lista
-    const conversaciones = Object.values(conversacionesAgrupadas);
+// Verifica si la conversación tiene preguntas sin responder
+function tienePendiente(conversacion, esPropietario) {
 
-    let tituloRecibidasAgregado = false;
-    let tituloRealizadasAgregado = false;
-
-    for (let i = 0; i < conversaciones.length; i++) {
-        const c = conversaciones[i];
-
-        const esPropietario = String(usuarioLogueadoId) === String(c.propietarioId);
-
-         // Si es propietario, agrega el título de consultas recibidas
-        if (esPropietario) {
-            tituloRecibidasAgregado = agregarTituloSiCorresponde(
-                lista,
-                "Consultas recibidas",
-                tituloRecibidasAgregado
-            );
-        } else {
-            tituloRealizadasAgregado = agregarTituloSiCorresponde(
-                lista,
-                "Consultas realizadas",
-                tituloRealizadasAgregado
-            );
-        }
-
-
-        // Si soy propietario, muestro el nombre de quien preguntó, caso contrario el propietario
-        const nombreMostrar = esPropietario
-            ? c.mensajes[0].pregunta.usuario.nombre
-            : c.propietario;
-
-        let tienePendiente = false;
-
-        if (esPropietario && c.mensajes && c.mensajes.length > 0) {
-            for (let j = 0; j < c.mensajes.length; j++) {
-                 // Si una pregunta no tiene respuesta, marcamos la conversación como pendiente
-                if (!c.mensajes[j].respuesta) {
-                    tienePendiente = true;
-                    break;
-                }
-            }
-        }
-
-         // Crea el elemento visual de la conversación
-        const item = document.createElement("div");
-        item.className = "chat-item";
-
-        if (tienePendiente) {
-            item.classList.add("chat-pendiente");
-        }
-
-        item.innerHTML = `
-            <strong>${nombreMostrar}</strong>
-            <small>
-                ${c.marca} ${c.modelo}
-                ${tienePendiente ? '<span class="chat-punto"></span>' : ''}
-            </small>
-        `;
-
-        // Evento al hacer clic sobre una conversación
-        item.onclick = function () {
-             // Quita la clase activo de todos los chats
-            document.querySelectorAll(".chat-item").forEach(chat => {
-                chat.classList.remove("activo");
-            });
-
-             // Marca el chat actual como activo
-            item.classList.add("activo");
-            seleccionarConversacion(c.conversacionId);
-        };
-
-        // Agrega el chat a la lista lateral
-        lista.appendChild(item);
+    // Si no soy el propietario o no hay mensajes, no hay pendientes
+    if (!esPropietario || !conversacion.mensajes || conversacion.mensajes.length === 0) {
+        return false;
     }
 
-    await abrirConversacionInicial(conversaciones);
+    // Recorre los mensajes buscando preguntas sin respuesta
+    for (let j = 0; j < conversacion.mensajes.length; j++) {
+        if (!conversacion.mensajes[j].respuesta) {
+            return true;
+        }
+    }
+
+    return false;
 }
+
+
+// Crea la lista lateral
+function crearItemConversacion(c, esPropietario, pendiente) {
+
+    const item = document.createElement("div");
+    item.className = "chat-item";
+
+    // Si tiene mensajes pendientes se agrega estilo visual
+    if (pendiente) {
+        item.classList.add("chat-pendiente");
+    }
+
+    // Muestra el nombre del usuario correspondiente
+    const nombreMostrar = esPropietario
+        ? c.mensajes[0].pregunta.usuario.nombre
+        : c.propietario;
+
+    // Contenido del chat en la lista
+    item.innerHTML = `
+        <strong>${nombreMostrar}</strong>
+        <small>
+            ${c.marca} ${c.modelo}
+            ${pendiente ? '<span class="chat-punto"></span>' : ''}
+        </small>
+    `;
+
+    // Evento al hacer clic en la conversación
+    item.onclick = function () {
+
+        // Quita el estado activo de todos los chats
+        document.querySelectorAll(".chat-item").forEach(chat => {
+            chat.classList.remove("activo");
+        });
+
+        // Marca este chat como activo
+        item.classList.add("activo");
+
+        // Abre la conversación seleccionada
+        seleccionarConversacion(c.conversacionId);
+    };
+
+    return item;
+}
+
+
 
 async function seleccionarConversacion(conversacionId) {
     conversacionSeleccionada = conversacionId;
