@@ -28,11 +28,13 @@ async function cargarConversaciones() {
             return;
         }
 
+        // Une ambas listas de preguntas en un solo arreglo
         const todasLasPreguntas = [
             ...misPreguntas,
             ...preguntasDeMisVehiculos
         ];
 
+         // Reinicia el objeto donde se almacenan las conversaciones agrupadas
         conversacionesAgrupadas = {};
 
         // Agrupa las preguntas por vehículo para formar conversaciones
