@@ -1,5 +1,3 @@
-
-
 function mostrarVehiculos(vehiculos) {
     const contenedor = document.getElementById('vehiculosContainer');
     contenedor.innerHTML = '';
