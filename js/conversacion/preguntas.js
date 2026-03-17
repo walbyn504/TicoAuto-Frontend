@@ -14,8 +14,10 @@ async function enviarPregunta() {
 
     let vehiculoId = null;
 
+    // Busca el vehículo asociado a la conversación seleccionada
     const conversacion = conversacionesAgrupadas[conversacionSeleccionada];
 
+    // Si ya existe conversación, toma el ID del vehículo desde esa conversación
     if (conversacion) {
         vehiculoId = conversacion.vehiculoId;
     } else {
@@ -44,9 +46,8 @@ async function enviarPregunta() {
         textarea.value = "";
         await cargarConversaciones();
 
-        // Después de guardar, ya debería existir la conversación real
+        // Después de recargar las conversaciones, selecciona la conversación actualizada
         const nuevaConversacionId = `${vehiculoId} - ${usuarioLogueadoId}`;
-
         if (conversacionesAgrupadas[nuevaConversacionId]) {
             await seleccionarConversacion(nuevaConversacionId);
         }
