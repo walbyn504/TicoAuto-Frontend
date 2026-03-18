@@ -1,13 +1,13 @@
 async function cargarConversaciones() {
     try {
         const [responseMisPreguntas, responsePreguntasDeMisVehiculos] = await Promise.all([
-            fetch(`${apiBaseUrl}/api/pregunta/obtenerMisPreguntas`, {
+            fetch(`${apiBaseUrl}/api/preguntas/enviadas`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             }),
-            fetch(`${apiBaseUrl}/api/obtenerPreguntasDeMisVehiculos`, {
+            fetch(`${apiBaseUrl}/api/preguntas/recibidas`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`
